@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
+<!--Generated with glade3 3.4.2 on Sat Aug 29 01:08:03 2009 -->
+<glade-interface>
+  <widget class="GtkWindow" id="windowMain">
+    <property name="width_request">333</property>
+    <property name="height_request">145</property>
+    <property name="visible">True</property>
+    <property name="can_focus">True</property>
+    <property name="has_default">True</property>
+    <property name="events">GDK_BUTTON3_MOTION_MASK | GDK_STRUCTURE_MASK</property>
+    <property name="title" translatable="yes">Pinna - Main Window</property>
+    <property name="resizable">False</property>
+    <property name="window_position">GTK_WIN_POS_CENTER</property>
+    <property name="default_width">346</property>
+    <property name="default_height">143</property>
+    <property name="gravity">GDK_GRAVITY_STATIC</property>
+    <signal name="destroy_event" handler="on_windowMain_destroy_event"/>
+    <signal name="key_press_event" handler="on_windowMain_key_press_event"/>
+    <signal name="delete_event" handler="on_windowMain_delete_event"/>
+    <child>
+      <widget class="GtkLayout" id="layout1">
+        <property name="width_request">359</property>
+        <property name="height_request">143</property>
+        <property name="visible">True</property>
+        <property name="width">359</property>
+        <property name="height">143</property>
+        <child>
+          <widget class="GtkButton" id="previous_button">
+            <property name="width_request">45</property>
+            <property name="height_request">28</property>
+            <property name="visible">True</property>
+            <property name="events">GDK_BUTTON_PRESS_MASK</property>
+            <property name="focus_on_click">False</property>
+            <property name="response_id">0</property>
+            <signal name="clicked" handler="on_previous_button_clicked"/>
+            <child>
+              <widget class="GtkImage" id="image1">
+                <property name="visible">True</property>
+                <property name="stock">gtk-media-previous</property>
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="y">84</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkButton" id="stop_button">
+            <property name="width_request">45</property>
+            <property name="height_request">28</property>
+            <property name="visible">True</property>
+            <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
+            <property name="focus_on_click">False</property>
+            <property name="response_id">0</property>
+            <signal name="clicked" handler="on_stop_button_clicked"/>
+            <child>
+              <widget class="GtkImage" id="image2">
+                <property name="visible">True</property>
+                <property name="stock">gtk-media-stop</property>
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="x">45</property>
+            <property name="y">84</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkButton" id="play_button">
+            <property name="width_request">45</property>
+            <property name="height_request">28</property>
+            <property name="visible">True</property>
+            <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
+            <property name="focus_on_click">False</property>
+            <property name="response_id">0</property>
+            <signal name="clicked" handler="on_play_button_clicked"/>
+            <child>
+              <widget class="GtkImage" id="image3">
+                <property name="visible">True</property>
+                <property name="stock">gtk-media-play</property>
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="x">89</property>
+            <property name="y">84</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkButton" id="next_button">
+            <property name="width_request">45</property>
+            <property name="height_request">28</property>
+            <property name="visible">True</property>
+            <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
+            <property name="focus_on_click">False</property>
+            <property name="response_id">0</property>
+            <signal name="clicked" handler="on_next_button_clicked"/>
+            <child>
+              <widget class="GtkImage" id="image4">
+                <property name="visible">True</property>
+                <property name="stock">gtk-media-next</property>
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="x">134</property>
+            <property name="y">84</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkLabel" id="current_song_label">
+            <property name="width_request">246</property>
+            <property name="height_request">37</property>
+            <property name="visible">True</property>
+            <property name="xalign">0</property>
+            <property name="xpad">2</property>
+            <property name="use_markup">True</property>
+          </widget>
+          <packing>
+            <property name="x">85</property>
+            <property name="y">1</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkHScale" id="volume_scale">
+            <property name="width_request">145</property>
+            <property name="height_request">32</property>
+            <property name="visible">True</property>
+            <property name="events">GDK_STRUCTURE_MASK | GDK_SCROLL_MASK</property>
+            <property name="adjustment">0 0 100 0 9 0</property>
+            <property name="digits">0</property>
+            <signal name="adjust_bounds" handler="dicks"/>
+          </widget>
+          <packing>
+            <property name="x">188</property>
+            <property name="y">79</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkButton" id="info_button">
+            <property name="width_request">40</property>
+            <property name="height_request">26</property>
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Info</property>
+            <property name="focus_on_click">False</property>
+            <property name="response_id">0</property>
+            <signal name="clicked" handler="on_info_button_clicked"/>
+          </widget>
+          <packing>
+            <property name="x">62</property>
+            <property name="y">116</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkButton" id="settings_button">
+            <property name="width_request">65</property>
+            <property name="height_request">26</property>
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">settings</property>
+            <property name="focus_on_click">False</property>
+            <property name="response_id">0</property>
+            <signal name="clicked" handler="on_settings_button_clicked"/>
+          </widget>
+          <packing>
+            <property name="x">103</property>
+            <property name="y">116</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkButton" id="browser_button">
+            <property name="width_request">62</property>
+            <property name="height_request">26</property>
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">browser</property>
+            <property name="focus_on_click">False</property>
+            <property name="response_id">0</property>
+            <signal name="clicked" handler="on_browser_button_clicked"/>
+          </widget>
+          <packing>
+            <property name="y">116</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkToggleButton" id="shuffle_button">
+            <property name="width_request">60</property>
+            <property name="height_request">26</property>
+            <property name="visible">True</property>
+            <property name="resize_mode">GTK_RESIZE_IMMEDIATE</property>
+            <property name="label" translatable="yes">Shuffle</property>
+            <property name="focus_on_click">False</property>
+            <property name="response_id">1</property>
+            <signal name="toggled" handler="on_shuffle_button_toggled"/>
+          </widget>
+          <packing>
+            <property name="x">206</property>
+            <property name="y">116</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkToggleButton" id="repeat_button">
+            <property name="width_request">60</property>
+            <property name="height_request">26</property>
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Repeat</property>
+            <property name="focus_on_click">False</property>
+            <property name="response_id">0</property>
+            <signal name="clicked" handler="on_repeat_button_clicked"/>
+          </widget>
+          <packing>
+            <property name="x">273</property>
+            <property name="y">116</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkProgressBar" id="progressbar">
+            <property name="width_request">249</property>
+            <property name="height_request">29</property>
+            <property name="visible">True</property>
+            <property name="events">GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_STRUCTURE_MASK</property>
+            <property name="show_text">True</property>
+            <property name="text" translatable="yes">STOPPED</property>
+            <signal name="button_press_event" handler="on_progressbar_button_press_event"/>
+          </widget>
+          <packing>
+            <property name="x">83</property>
+            <property name="y">47</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkImage" id="main_window_album_art">
+            <property name="width_request">80</property>
+            <property name="height_request">80</property>
+            <property name="visible">True</property>
+            <property name="stock">gtk-missing-image</property>
+            <property name="icon_size">6</property>
+          </widget>
+        </child>
+      </widget>
+    </child>
+  </widget>
+</glade-interface>

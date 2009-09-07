@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Pinna
+Commend=Simple GTK MPD Frontend
+Exec=pinna
+Terminal=false
+Type=Application
+Icon=pinna
+Categories=GTK;AudioVideo;Player;
+StartupNotify=True

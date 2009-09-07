@@ -1,0 +1,35 @@
+main window:
+
+UP = volume up
+DOWN = volume down
+LEFT = previous song
+RIGHT = next song
+delete = shuffle
+page down = repeat
+end = stop
+
+escape = closes current window 
+
+Browser window:
+
+  F1 = current playlist
+  F2 = file_browser
+  F3 = playlist browser
+  
+  file_browser mode / playlist mode
+   insert = add
+   
+  curent playlist
+   delete = remove song
+   
+ 
+song info window:
+ 
+ F1 = get lyrics
+ F2 = get artist bio
+ F3 = get album art
+ F4 = get all
+ 
+  
+  
+  

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
+<!--Generated with glade3 3.4.2 on Thu Aug 13 01:28:37 2009 -->
+<glade-interface>
+  <widget class="GtkWindow" id="info_window">
+    <property name="width_request">601</property>
+    <property name="height_request">460</property>
+    <property name="title" translatable="yes">Pinna - Info Window</property>
+    <signal name="key_press_event" handler="on_info_window_key_press_event"/>
+    <signal name="delete_event" handler="on_info_window_delete_event"/>
+    <child>
+      <widget class="GtkVBox" id="vbox1">
+        <property name="visible">True</property>
+        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+        <child>
+          <widget class="GtkFixed" id="fixed1">
+            <property name="visible">True</property>
+            <child>
+              <widget class="GtkImage" id="album_art">
+                <property name="width_request">115</property>
+                <property name="height_request">115</property>
+                <property name="visible">True</property>
+                <property name="pixbuf">no_image.png</property>
+              </widget>
+              <packing>
+                <property name="x">1</property>
+                <property name="y">1</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkButton" id="lyric_button">
+                <property name="width_request">103</property>
+                <property name="height_request">25</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="label" translatable="yes">Lyrics</property>
+                <property name="response_id">0</property>
+                <signal name="clicked" handler="on_lyric_button_clicked"/>
+              </widget>
+              <packing>
+                <property name="x">125</property>
+                <property name="y">91</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkButton" id="info_button">
+                <property name="width_request">103</property>
+                <property name="height_request">25</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="label" translatable="yes">Artist Bio</property>
+                <property name="response_id">0</property>
+                <signal name="clicked" handler="on_info_button_clicked"/>
+              </widget>
+              <packing>
+                <property name="x">228</property>
+                <property name="y">91</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkButton" id="albumart_button">
+                <property name="width_request">103</property>
+                <property name="height_request">25</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="label" translatable="yes">Album Art</property>
+                <property name="response_id">0</property>
+                <signal name="clicked" handler="on_albumart_button_clicked"/>
+              </widget>
+              <packing>
+                <property name="x">331</property>
+                <property name="y">91</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkEntry" id="album_entry">
+                <property name="width_request">307</property>
+                <property name="height_request">20</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="invisible_char">●</property>
+              </widget>
+              <packing>
+                <property name="x">126</property>
+                <property name="y">56</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkEntry" id="title_entry">
+                <property name="width_request">307</property>
+                <property name="height_request">20</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="invisible_char">●</property>
+              </widget>
+              <packing>
+                <property name="x">126</property>
+                <property name="y">33</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkEntry" id="artist_entry">
+                <property name="width_request">307</property>
+                <property name="height_request">20</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="invisible_char">●</property>
+              </widget>
+              <packing>
+                <property name="x">126</property>
+                <property name="y">10</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkScrolledWindow" id="scrolledwindow1">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="hscrollbar_policy">GTK_POLICY_NEVER</property>
+            <child>
+              <widget class="GtkTextView" id="info_textview">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="editable">False</property>
+                <property name="wrap_mode">GTK_WRAP_WORD</property>
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+</glade-interface>
