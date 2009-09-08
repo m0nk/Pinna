@@ -1,9 +1,13 @@
 #idle loops
 import gobject
+import gtk
 from connection import client
+from variables import checks
+from variables import settings
+from variables import main_vars
 from variables import *
 from ui import *
-from scrapers import change_info
+from scrapers import check_album_art
 import time
 
 def song_change():
@@ -22,11 +26,21 @@ def song_change():
   else:
     insert=current_song['file'].split('/')
     insert=insert[len(insert)-1]
+  change_art(artist,album)
   insert=insert.replace('&','&amp;')
   mainwindow_wTree.get_widget('current_song_label').set_property("label","<span font_size='12344'>"+insert+"</span>")
   infowindow_wTree.get_widget('artist_entry').set_text(artist)
   infowindow_wTree.get_widget('title_entry').set_text(title)
   infowindow_wTree.get_widget('album_entry').set_text(album)
+
+def change_art(artist,album):
+  check=None
+  if artist and album:
+    check = check_album_art()
+  if check:
+    mainwindow_wTree.get_widget("main_window_album_art").set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(check).scale_simple(80,80,gtk.gdk.INTERP_BILINEAR))
+  else:
+    mainwindow_wTree.get_widget('main_window_album_art').set_from_pixbuf(default_albumart.scale_simple(80,80,gtk.gdk.INTERP_BILINEAR))
 
 def parse_time(mtime):
   new_time=""
@@ -68,6 +82,7 @@ def update_current_playlist():
   status=client.status()
   browser_vars.current_playlist[0]=None
   browser_vars.current_playlist[1]=[]
+  print browser_vars.current_playlist
   for song in client.playlistinfo():
     if 'artist' and 'title' in song.keys():
       insert=song['artist']+' - '+song['title']
@@ -87,7 +102,7 @@ def update_current_playlist():
   
 def check_alarm():
   real_time=time.localtime()[3:6]
-  #print real_time
+  print real_time
   alarm_time=(settings.alarm_hour,settings.alarm_minute)
   if real_time[2]==0:
     if real_time[0]==int(alarm_time[0]) and real_time[1]==int(alarm_time[1]):
@@ -98,7 +113,7 @@ def check_alarm():
     print 'dicks'
     
 def idle_loop():
-  #try:
+  try:
     status=client.status()    
     stats=client.stats()
     if status['playlist'] != browser_vars.playlist_version:
@@ -108,19 +123,12 @@ def idle_loop():
     if 'time' in status:
       if 'song' in status:
        if status['song']!=checks.song:
-        change_info()
         song_change()
         checks.song=status['song']
       handle_time(status)
     else:
-     
       if 'song' not in status:
         mainwindow_wTree.get_widget('main_window_album_art').set_from_pixbuf(default_albumart.scale_simple(80,80,gtk.gdk.INTERP_BILINEAR))
-        infowindow_wTree.get_widget('album_art').set_from_pixbuf(default_albumart)
-        infowindow_wTree.get_widget('artist_entry').set_text('')
-        infowindow_wTree.get_widget('title_entry').set_text('')
-        infowindow_wTree.get_widget('album_entry').set_text('')
-        infowindow_wTree.get_widget('info_textview').get_buffer().set_text('')
       mainwindow_wTree.get_widget('progressbar').set_text('00:00/00:00')
       mainwindow_wTree.get_widget('progressbar').set_fraction(0.0)
       if status['playlistlength']=='0':
@@ -128,19 +136,18 @@ def idle_loop():
     ###set things that are bound to change often :)
     mainwindow_wTree.get_widget('volume_scale').set_value(int(status['volume']))
     handle_toggles(status)  
-    return True
-  #except: 
-  # mainwindow_wTree.get_widget('progressbar').set_text('not connected')
-  # mainwindow_wTree.get_widget('progressbar').set_fraction(0.0)
-  # mainwindow_wTree.get_widget('current_song_label').set_property('label','')
-  # try:
-  #   try:
-  #     client.disconnect()
-  #   except:
-  #     pass
-  #   client.connect(settings.mpd_host,int(settings.mpd_port))
-  # except:
-  #   pass
-  # return True  
+  except: 
+   mainwindow_wTree.get_widget('progressbar').set_text('not connected')
+   mainwindow_wTree.get_widget('progressbar').set_fraction(0.0)
+   mainwindow_wTree.get_widget('current_song_label').set_property('label','')
+   try:
+     try:
+       client.disconnect()
+     except:
+       pass
+     client.connect(settings.mpd_host,int(settings.mpd_port))
+   except:
+     pass
+  return True  
 
 gobject.timeout_add(250,idle_loop)  
