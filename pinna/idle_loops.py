@@ -69,7 +69,7 @@ def update_current_playlist():
   browser_vars.current_playlist[0]=None
   browser_vars.current_playlist[1]=[]
   for song in client.playlistinfo():
-    if 'artist' and 'title' in song.keys():
+    if 'artist' in song.keys() and 'title' in song.keys():
       insert=song['artist']+' - '+song['title']
     else:
       insert=song['file'].split('/')

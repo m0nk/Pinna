@@ -154,9 +154,10 @@ def browser_doubleclick():
     change_directory(browser_vars.browser_list[1][selections[0]][2])
 
 def browser_add(widget):
-  selections=browserwindow_wTree.get_widget('browser_list').get_selection().get_selected_rows()[1][0]
+  selections=browserwindow_wTree.get_widget('browser_list').get_selection().get_selected_rows()[1]
+  print selections
   for selection in selections:
-    client.add(browser_vars.browser_list[1][selection][2])
+    client.add(browser_vars.browser_list[1][selection[0]][2])
 
 def update_database(widget):
   client.update()
