@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.2 on Thu Aug 13 01:28:37 2009 -->
+<!--Generated with glade3 3.4.2 on Thu Sep 10 00:05:32 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="info_window">
     <property name="width_request">601</property>
@@ -23,10 +23,6 @@
                 <property name="visible">True</property>
                 <property name="pixbuf">no_image.png</property>
               </widget>
-              <packing>
-                <property name="x">1</property>
-                <property name="y">1</property>
-              </packing>
             </child>
             <child>
               <widget class="GtkButton" id="lyric_button">
