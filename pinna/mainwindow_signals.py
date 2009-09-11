@@ -7,8 +7,6 @@ from variables import settings
 from variables import checks
 from variables import main_vars
 
-print "finger blast my dickhole"
-
 def show_browser_window(widget):
   browserwindow_wTree.get_widget('browser_window').show()
 

@@ -77,7 +77,6 @@ def update_current_playlist():
     browser_vars.current_playlist[1].append(insert.replace('&','&amp;'))
   if browser_vars.view=='current':
     model=browserwindow_wTree.get_widget('browser_list').get_model()
-    print model
     browserwindow_wTree.get_widget('browser_list').set_model()
     model.clear()
     for item in browser_vars.current_playlist[1]:
@@ -94,7 +93,6 @@ def check_alarm():
       client.clear()
       client.load('alarm')
       client.play()
-    print 'dicks'
     
 def idle_loop():
   try:
