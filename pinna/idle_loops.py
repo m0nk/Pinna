@@ -87,7 +87,6 @@ def update_current_playlist():
   
 def check_alarm():
   real_time=time.localtime()[3:6]
-  #print real_time
   alarm_time=(settings.alarm_hour,settings.alarm_minute)
   if real_time[2]==0:
     if real_time[0]==int(alarm_time[0]) and real_time[1]==int(alarm_time[1]):
@@ -98,7 +97,7 @@ def check_alarm():
     print 'dicks'
     
 def idle_loop():
-  #try:
+  try:
     status=client.status()    
     stats=client.stats()
     if status['playlist'] != browser_vars.playlist_version:
@@ -129,18 +128,20 @@ def idle_loop():
     mainwindow_wTree.get_widget('volume_scale').set_value(int(status['volume']))
     handle_toggles(status)  
     return True
-  #except: 
-  # mainwindow_wTree.get_widget('progressbar').set_text('not connected')
-  # mainwindow_wTree.get_widget('progressbar').set_fraction(0.0)
-  # mainwindow_wTree.get_widget('current_song_label').set_property('label','')
-  # try:
-  #   try:
-  #     client.disconnect()
-  #   except:
-  #     pass
-  #   client.connect(settings.mpd_host,int(settings.mpd_port))
-  # except:
-  #   pass
-  # return True  
+  except: 
+    checks.song=None
+    mainwindow_wTree.get_widget('progressbar').set_text('not connected')
+    mainwindow_wTree.get_widget('progressbar').set_fraction(0.0)
+    mainwindow_wTree.get_widget('current_song_label').set_property('label','')
+    try:
+      client.disconnect()
+    except:
+      pass
+    try:
+      client.connect(settings.mpd_host,int(settings.mpd_port))
+      client.password(settings.mpd_pass)
+    except:
+      pass
+  return True  
 
 gobject.timeout_add(250,idle_loop)  

@@ -11,7 +11,6 @@ def change_info():
   file_name=song['file'].split('/')
   file_name=file_name[len(file_name)-1]
   check=os.getenv("HOME")+"/.pinna/lyrics/"+file_name[0:len(file_name)-3]+'txt'
-  print check
   if os.path.isfile(check):
     temp=open(check)
     lyrics=temp.read()
@@ -54,7 +53,6 @@ def scrape_lyrics():
   title=infowindow_wTree.get_widget('title_entry').get_text().replace(' ','%20')
   
   url='http://lyricsplugin.com/wmplayer03/plugin/?artist='+artist+'&title='+title
-  print url
   u=urllib2.urlopen(url)
   lyrics=u.read()
   lyrics=lyrics[lyrics.find('<div id="lyrics">')+17:len(lyrics)]
@@ -121,7 +119,6 @@ def get_albumart(widget):
     start=data.find('<td class="imageColumn" width="123"><table border="0" cellpadding="0" cellspacing="0">')
     end=data.find('<td class="dataColumn"><table cellpadding="0" cellspacing="0" border="0"><tr><td>')
     data=data[start:end]
-    print data
     temp=data.find('<img src="')
     if temp < 0:
       temp=data.find(' src=')+6
@@ -152,6 +149,18 @@ if not os.path.isdir(os.getenv("HOME")+"/.pinna/bios"):
 if not os.path.isdir(os.getenv("HOME")+"/.pinna/lyrics"):
   os.mkdir(os.getenv("HOME")+"/.pinna/lyrics")
   
-buttons={'on_info_window_delete_event':close,'on_lyric_button_clicked':get_lyrics,'on_albumart_button_clicked':get_albumart,'on_info_button_clicked':get_artist_bio}
+def hotkeys(widget,event):
+  keypress=event.keyval
+  if keypress == 65470:
+    get_lyrics(None)
+  if keypress == 65471:
+    get_artist_bio(None)
+  if keypress == 65472:
+    get_albumart(None)
+  if keypress == 65307:
+    close(None,None)
+      
+  
+buttons={'on_info_window_delete_event':close,'on_lyric_button_clicked':get_lyrics,'on_albumart_button_clicked':get_albumart,'on_info_button_clicked':get_artist_bio,'on_info_window_key_press_event':hotkeys}
 
 infowindow_wTree.signal_autoconnect(buttons)

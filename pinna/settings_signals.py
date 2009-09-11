@@ -45,7 +45,6 @@ def insert_config():
   settingswindow_wTree.get_widget('mpd_password').set_text(settings.mpd_pass)
   settingswindow_wTree.get_widget('stop_on_exit').set_active(int(settings.stop_on_exit))
   settingswindow_wTree.get_widget('alarm_enable').set_active(int(settings.alarm_enable))
-  #stop_on_exit
   settingswindow_wTree.get_widget('alarm_hours').set_value(int(settings.alarm_hour))
   settingswindow_wTree.get_widget('alarm_minutes').set_value(int(settings.alarm_minute))
   settingswindow_wTree.get_widget('alarm_volume').set_value(int(settings.alarm_volume))
@@ -70,7 +69,6 @@ def apply_settings():
     
 def save_config(widget):
   apply_settings()
-  print 'saving config'
   temp=open(os.getenv("HOME")+"/.pinna.conf",'w')
   temp.write('mpd_host = '+settings.mpd_host+"\n")
   temp.write('mpd_port = '+settings.mpd_port+"\n")
@@ -86,6 +84,12 @@ def close_window(widget,event):
   settingswindow_wTree.get_widget('settings_window').hide()
   return True
   
-buttons={'on_save_button_clicked':save_config,'on_settings_window_delete_event':close_window}
+def hotkeys(widget,event):
+  keypress=event.keyval
+  if keypress==65307:
+    close_window(None,None)
+  return True
+  
+buttons={'on_save_button_clicked':save_config,'on_settings_window_delete_event':close_window,'on_settings_window_key_press_event':hotkeys}
 settingswindow_wTree.signal_autoconnect(buttons)
 read_config()
