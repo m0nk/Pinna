@@ -23,7 +23,6 @@ def read_config():
         settings.alarm_minute=line[1].split(":")[1]
       if line[0]=='alarm_volume':
         settings.alarm_volume=line[1]
-        print line[1]
     temp.close()
   else:
     save_config()

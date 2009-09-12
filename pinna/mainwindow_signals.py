@@ -68,6 +68,22 @@ def quit(widget,event):
     client.stop()
   sys.exit(1)
 
+def show_albumart():
+  mainwindow_wTree.get_widget('main_window_album_art').show()
+  main_vars.album_art='1'
+  mainwindow_wTree.get_widget('current_song_label').set_size_request(249,37)
+  mainwindow_wTree.get_widget('progressbar').set_size_request(249,29)
+  mainwindow_wTree.get_widget('layout1').move(mainwindow_wTree.get_widget('current_song_label'),83,1)
+  mainwindow_wTree.get_widget('layout1').move(mainwindow_wTree.get_widget('progressbar'),83,47)
+  
+def hide_albumart():
+  mainwindow_wTree.get_widget('main_window_album_art').hide()
+  main_vars.album_art='0'
+  mainwindow_wTree.get_widget('current_song_label').set_size_request(332,37)
+  mainwindow_wTree.get_widget('progressbar').set_size_request(332,29)
+  mainwindow_wTree.get_widget('layout1').move(mainwindow_wTree.get_widget('current_song_label'),0,1)
+  mainwindow_wTree.get_widget('layout1').move(mainwindow_wTree.get_widget('progressbar'),0,47)
+  
 def hotkeys(widget,event):
   keypress = event.keyval
   if keypress == 65367: # end
@@ -86,6 +102,11 @@ def hotkeys(widget,event):
     repeat(None)
   if keypress == 32: #space
     play(None)
+  if keypress == 97:
+    if main_vars.album_art=='1':
+      hide_albumart()
+    else:
+      show_albumart()
   return True
   
 buttons={'on_previous_button_clicked':previous,'on_next_button_clicked':next,'on_play_button_clicked':play,'on_stop_button_clicked':stop,

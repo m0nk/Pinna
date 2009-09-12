@@ -92,7 +92,6 @@ def get_artist_bio(widget):
       temp.close()
     else:
       url='http://www.last.fm/music/'+artist+'/+wiki'
-      print url
       u=urllib2.urlopen(url)
       data=u.read()
       start=data.find('<div id="wiki">')+36
@@ -125,7 +124,6 @@ def get_albumart(widget):
     else:
       temp+=10
     data=data[temp:data.find('.jpg"')+4]
-    print data
     u=urllib2.urlopen(data)
     picture=u.read()
     u.close()

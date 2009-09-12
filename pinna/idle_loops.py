@@ -62,8 +62,20 @@ def handle_toggles(status):
     
   
 def highlight_current_song():
-  pass
-
+  status=client.status()
+  if 'song' in status.keys():
+    song=int(status['song'])
+    if browser_vars.last_song:
+      browser_vars.current_playlist[1][browser_vars.last_song[0]]=browser_vars.last_song[1]
+      if browser_vars.view=='current':
+        liter=browserwindow_wTree.get_widget('browser_list').get_model().get_iter(int(browser_vars.last_song[0]))
+        browserwindow_wTree.get_widget('browser_list').get_model().set_value(liter,0,browser_vars.last_song[1])
+    liter=browserwindow_wTree.get_widget('browser_list').get_model().get_iter(song)
+    if browser_vars.view=='current':
+      browserwindow_wTree.get_widget('browser_list').get_model().set_value(liter,0,'<b>'+browser_vars.current_playlist[1][song]+'</b>')
+      browser_vars.last_song=(song,browser_vars.current_playlist[1][song])
+    browser_vars.current_playlist[1][song]='<b>'+browser_vars.current_playlist[1][song]+'</b>'
+    
 def update_current_playlist():
   status=client.status()
   browser_vars.current_playlist[0]=None
@@ -83,7 +95,12 @@ def update_current_playlist():
       model.append([item])
     browserwindow_wTree.get_widget('browser_list').set_model(model)
   browser_vars.playlist_version=status['playlist']
-  
+  if browser_vars.last_song:
+    if browser_vars.last_song[0] > len(browser_vars.current_playlist[1]):
+      browser_vars.last_song=None
+    elif browser_vars.current_playlist[1][int(browser_vars.last_song[0])]!=browser_vars.last_song[1]:
+      browser_vars.last_song=None
+      
 def check_alarm():
   real_time=time.localtime()[3:6]
   alarm_time=(settings.alarm_hour,settings.alarm_minute)
@@ -95,7 +112,7 @@ def check_alarm():
       client.play()
     
 def idle_loop():
-  try:
+  #try:
     status=client.status()    
     stats=client.stats()
     if status['playlist'] != browser_vars.playlist_version:
@@ -105,13 +122,17 @@ def idle_loop():
     if 'time' in status:
       if 'song' in status:
        if status['song']!=checks.song:
+        highlight_current_song()
         change_info()
         song_change()
         checks.song=status['song']
+      else:
+        checks.song=None
       handle_time(status)
     else:
      
       if 'song' not in status:
+        checks.song=None
         mainwindow_wTree.get_widget('main_window_album_art').set_from_pixbuf(default_albumart.scale_simple(80,80,gtk.gdk.INTERP_BILINEAR))
         infowindow_wTree.get_widget('album_art').set_from_pixbuf(default_albumart)
         infowindow_wTree.get_widget('artist_entry').set_text('')
@@ -124,22 +145,23 @@ def idle_loop():
         mainwindow_wTree.get_widget('current_song_label').set_property('label','')
     ###set things that are bound to change often :)
     mainwindow_wTree.get_widget('volume_scale').set_value(int(status['volume']))
-    handle_toggles(status)  
-    return True
-  except: 
-    checks.song=None
-    mainwindow_wTree.get_widget('progressbar').set_text('not connected')
-    mainwindow_wTree.get_widget('progressbar').set_fraction(0.0)
-    mainwindow_wTree.get_widget('current_song_label').set_property('label','')
-    try:
-      client.disconnect()
-    except:
-      pass
-    try:
-      client.connect(settings.mpd_host,int(settings.mpd_port))
-      client.password(settings.mpd_pass)
-    except:
-      pass
-  return True  
+    handle_toggles(status)
+    return True  
+  #except: 
+   # print 'not connected'
+   # checks.song=None
+   # mainwindow_wTree.get_widget('progressbar').set_text('not connected')
+   # mainwindow_wTree.get_widget('progressbar').set_fraction(0.0)
+   # mainwindow_wTree.get_widget('current_song_label').set_property('label','')
+   # try:
+   #   client.disconnect()
+   # except:
+   #   pass
+   # try:
+   #   client.connect(settings.mpd_host,int(settings.mpd_port))
+   #   client.password(settings.mpd_pass)
+   # except:
+   #   pass
+    return True  
 
 gobject.timeout_add(250,idle_loop)  

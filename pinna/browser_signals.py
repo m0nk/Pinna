@@ -24,7 +24,6 @@ def change_playlist():
 def add_playlist(widget):
   client.clear()
   selection=browserwindow_wTree.get_widget('browser_list').get_selection().get_selected_rows()[1][0][0]
-  print selection
   client.load(browser_vars.playlist_list[1][selection])
 
 def merge_playlist(widget):
@@ -92,8 +91,7 @@ def create_playlist_cancel(widget):
 
 def current_clear(widget):
   client.clear()
-  
-
+   
 #file browser code
 
 def change_browser():  
@@ -155,35 +153,63 @@ def browser_doubleclick():
 
 def browser_add(widget):
   selections=browserwindow_wTree.get_widget('browser_list').get_selection().get_selected_rows()[1]
-  print selections
   for selection in selections:
     client.add(browser_vars.browser_list[1][selection[0]][2])
 
 def update_database(widget):
   client.update()
 
-#bs
-def hotkey(widget,button):
-  val=button.keyval
-  print val
-  
-
+def search(widget):
+ if browserwindow_wTree.get_widget('browser_mode').get_active()==1:
+  query = browserwindow_wTree.get_widget('search_query').get_text()
+  term = browserwindow_wTree.get_widget('search_item').get_active_text()
+  model=browserwindow_wTree.get_widget('browser_list').get_model()
+  browserwindow_wTree.get_widget('browser_list').set_model()
+  model.clear()
+  browser_vars.browser_list[0]=None
+  browser_vars.browser_list[1]=[]
+  browser_vars.browser_list[1].append(('directory','[ END SEARCH ]',''))
+  results = client.search(term,query)
+  for result in results:
+    if 'artist' in result.keys() and 'title' in result.keys():
+      insert=result['artist']+' - '+result['title']
+    else:
+      insert=result['file'].split('/')
+      insert=insert[len(insert)-1]
+    browser_vars.browser_list[1].append(('file',insert.replace('&','&amp;'),result['file']))
+  for song in browser_vars.browser_list[1]:
+    model.append([song[1]])
+  browserwindow_wTree.get_widget('browser_list').set_model(model)
+ 
+#bs 
 def close_browser(widget,event):
   browserwindow_wTree.get_widget('browser_window').hide()
   return True
 
+def disable_search():
+  browserwindow_wTree.get_widget('search_query').set_sensitive(False)
+  browserwindow_wTree.get_widget('search_item').set_sensitive(False)
+  browserwindow_wTree.get_widget('search_button').set_sensitive(False)
+
+def enable_search():
+  browserwindow_wTree.get_widget('search_query').set_sensitive(True)
+  browserwindow_wTree.get_widget('search_item').set_sensitive(True)
+  browserwindow_wTree.get_widget('search_button').set_sensitive(True)
+
 def change_browse_mode(widget):
-  print 'changed'
   selection=widget.get_active_text().strip('\n')
   if selection=='File':
+    enable_search()
     change_browser()
     browser_vars.view='file'
     browserwindow_wTree.get_widget('browser_window').set_title('Pinna - File Browser')
   if selection=='Current':
+    disable_search()
     change_current()
     browser_vars.view='current'
     browserwindow_wTree.get_widget('browser_window').set_title('Pinna - Current Browser')
   if selection=='Playlist':
+    disable_search()
     browser_vars.view='playlist'
     change_playlist()
     browserwindow_wTree.get_widget('browser_window').set_title('Pinna - Playlist Browser')
@@ -207,7 +233,6 @@ def treeview_event(widget,event):
     return True
 
 def browser_list_hotkey(wdiget,event):
-  print event.keyval
   keypress=event.keyval
   if keypress == 65535: #delete
     if browser_vars.view == 'current':
@@ -248,13 +273,14 @@ events={'on_browser_list_button_press_event':treeview_event,'on_browser_list_key
 
 shared_buttons={'on_browser_mode_changed':change_browse_mode,'browser_window_destroy':close_browser}
 current_buttons={'play_clicked':current_play,'clear_clicked':current_clear,'delete_clicked':current_delete,'create_playlist_clicked':create_playlist_show}
-file_buttons={'open_clicked':browser_open,'add_clicked':browser_add,'update_DB_clicked':update_database}
+file_buttons={'open_clicked':browser_open,'add_clicked':browser_add,'update_DB_clicked':update_database,'on_search_button_clicked':search}
 
 playlist_buttons={'user_input_destroy':create_playlist_cancel,'user_input_cancel_clicked_cb':create_playlist_cancel,'user_input_ok_clicked_cb':create_playlist_ok,
 'add_playlist_clicked':add_playlist,'merge_playlist_clicked':merge_playlist,'delete_playlist_clicked':delete_playlist,'on_ok_button_clicked':ok_clicked,
 'on_cancel_button_clicked':cancel_button}
 
 try:
+  disable_search()
   change_current()
   change_directory('')
 except:

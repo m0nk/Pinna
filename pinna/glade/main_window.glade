@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.2 on Sat Aug 29 01:08:03 2009 -->
+<!--Generated with glade3 3.4.2 on Fri Sep 11 13:09:00 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="windowMain">
     <property name="width_request">333</property>
@@ -110,7 +110,7 @@
         </child>
         <child>
           <widget class="GtkLabel" id="current_song_label">
-            <property name="width_request">246</property>
+            <property name="width_request">249</property>
             <property name="height_request">37</property>
             <property name="visible">True</property>
             <property name="xalign">0</property>
@@ -118,7 +118,7 @@
             <property name="use_markup">True</property>
           </widget>
           <packing>
-            <property name="x">85</property>
+            <property name="x">83</property>
             <property name="y">1</property>
           </packing>
         </child>
