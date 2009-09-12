@@ -119,7 +119,3 @@ main_vars.shuffle_id=temp.connect("toggled",shuffle)
     
 temp=mainwindow_wTree.get_widget("repeat_button")
 main_vars.repeat_id=temp.connect("toggled",repeat)
-
-
-
-

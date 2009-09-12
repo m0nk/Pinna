@@ -24,5 +24,4 @@ class browser_vars:
   playlist_list=[None,[]]
   current_playlist=[None,[]]
   playlist_version=0
-  last_song=None
-  
+  last_song=None  

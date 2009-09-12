@@ -20,7 +20,13 @@ def change_playlist():
     for item in browser_vars.playlist_list[1]:
       model.append([item])
     browserwindow_wTree.get_widget('browser_list').set_model(model)  
-        
+    if browser_vars.playlist_list[0]:
+      adj=browserwindow_wTree.get_widget('browser_scroll').get_vadjustment()
+      adj.lower=browser_vars.playlist_list[0][0]
+      adj.upper=browser_vars.playlist_list[0][3]-browser_vars.current_playlist[0][2]+browser_vars.current_playlist[0][0]
+      adj.value=browser_vars.playlist_list[0][0]
+      adj.page_size=browser_vars.playlist_list[0][1]
+       
 def add_playlist(widget):
   client.clear()
   selection=browserwindow_wTree.get_widget('browser_list').get_selection().get_selected_rows()[1][0][0]
@@ -58,7 +64,14 @@ def change_current():
     for song in browser_vars.current_playlist[1]:
       model.append([song])
   browserwindow_wTree.get_widget('browser_list').set_model(model)
-
+  if browser_vars.current_playlist[0]:
+    adj=browserwindow_wTree.get_widget('browser_scroll').get_vadjustment()
+    adj.lower=browser_vars.current_playlist[0][0]
+    adj.upper=browser_vars.current_playlist[0][3]-browser_vars.current_playlist[0][2]+browser_vars.current_playlist[0][0]
+    adj.value=browser_vars.current_playlist[0][0]
+    adj.page_size=browser_vars.current_playlist[0][1]
+    browserwindow_wTree.get_widget('browser_scroll').set_vadjustment(adj)
+    
 def current_play(widget):
   selection=browserwindow_wTree.get_widget('browser_list').get_selection().get_selected_rows()[1][0][0]
   client.play(selection)
@@ -91,6 +104,7 @@ def create_playlist_cancel(widget):
 
 def current_clear(widget):
   client.clear()
+  browser_vars.current_playlist[0]=None
    
 #file browser code
 
@@ -104,6 +118,14 @@ def change_browser():
     browserwindow_wTree.get_widget('browser_list').set_model(model)
   else:
     change_directory('')
+  #set scroll
+  if browser_vars.browser_list[0]:
+    adj=browserwindow_wTree.get_widget('browser_scroll').get_vadjustment()
+    adj.lower=browser_vars.browser_list[0][0]
+    adj.value=browser_vars.browser_list[0][0]
+    adj.page_size=browser_vars.browser_list[0][1]
+    adj.upper=browser_vars.browser_list[0][3]-browser_vars.browser_list[0][2]+browser_vars.browser_list[0][0]    
+    browserwindow_wTree.get_widget('browser_scroll').set_vadjustment(adj)
     
 def change_directory(new_directory):
   browser_vars.browser_list[1]=[]
@@ -197,6 +219,13 @@ def enable_search():
   browserwindow_wTree.get_widget('search_button').set_sensitive(True)
 
 def change_browse_mode(widget):
+  adj=browserwindow_wTree.get_widget('browser_scroll').get_vadjustment()
+  if browser_vars.view=='file':
+    browser_vars.browser_list[0]=(adj.value,adj.page_size,adj.lower,adj.upper)
+  if browser_vars.view=='current':
+    browser_vars.current_playlist[0]=(adj.value,adj.page_size,adj.lower,adj.upper)
+  if browser_vars.view=='playlist':
+    browser_vars.playlist_list[0]=(adj.value,adj.page_size,adj.lower,adj.upper)
   selection=widget.get_active_text().strip('\n')
   if selection=='File':
     enable_search()

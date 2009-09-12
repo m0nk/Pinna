@@ -96,11 +96,11 @@ def update_current_playlist():
     browserwindow_wTree.get_widget('browser_list').set_model(model)
   browser_vars.playlist_version=status['playlist']
   if browser_vars.last_song:
-    if browser_vars.last_song[0] > len(browser_vars.current_playlist[1]):
+    if int(browser_vars.last_song[0]) > len(browser_vars.current_playlist[1])-1:
       browser_vars.last_song=None
     elif browser_vars.current_playlist[1][int(browser_vars.last_song[0])]!=browser_vars.last_song[1]:
       browser_vars.last_song=None
-      
+
 def check_alarm():
   real_time=time.localtime()[3:6]
   alarm_time=(settings.alarm_hour,settings.alarm_minute)
@@ -117,6 +117,8 @@ def idle_loop():
     stats=client.stats()
     if status['playlist'] != browser_vars.playlist_version:
       update_current_playlist()
+      if status['state']!='stop':
+        highlight_current_song()
     if status['state']!='play':
       check_alarm()
     if 'time' in status:
@@ -146,7 +148,6 @@ def idle_loop():
     ###set things that are bound to change often :)
     mainwindow_wTree.get_widget('volume_scale').set_value(int(status['volume']))
     handle_toggles(status)
-
   except: 
     checks.song=None
     mainwindow_wTree.get_widget('progressbar').set_text('not connected')
@@ -162,5 +163,4 @@ def idle_loop():
     except:
       pass
   return True  
-
 gobject.timeout_add(250,idle_loop)  
