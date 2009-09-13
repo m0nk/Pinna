@@ -24,9 +24,10 @@ def read_config():
       if line[0]=='alarm_volume':
         settings.alarm_volume=line[1]
     temp.close()
+    insert_config()
   else:
+    insert_config()
     save_config(None)
-  insert_config()
   try:
     client.disconnect()
   except:

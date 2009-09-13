@@ -55,7 +55,7 @@ def scrape_lyrics():
   url='http://lyricsplugin.com/wmplayer03/plugin/?artist='+artist+'&title='+title
   u=urllib2.urlopen(url)
   lyrics=u.read()
-  lyrics=lyrics[lyrics.find('<div id="lyrics">')+17:len(lyrics)]
+  lyrics=lyrics[lyrics.find('<div id="lyrics">')+18:len(lyrics)]
   lyrics=lyrics[0:lyrics.find('</div>')]
   lyrics=lyrics.replace('<br />\n<br />','\n')
   lyrics=lyrics.replace('<br />','')
