@@ -250,6 +250,8 @@ def treeview_event(widget,event):
       current_play(None)    
     if browser_vars.view=='file':
       browser_doubleclick()
+    if browser_vars.view=='playlist':
+      merge_playlist(None)
     return True
   #right click
   if event.type==gtk.gdk.BUTTON_PRESS and event.button==3:
