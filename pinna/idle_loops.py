@@ -89,7 +89,7 @@ def update_current_playlist():
     browser_vars.current_playlist[1].append(insert.replace('&','&amp;'))
   if browser_vars.view=='current':
     model=browserwindow_wTree.get_widget('browser_list').get_model()
-    browserwindow_wTree.get_widget('browser_list').set_model()
+    browserwindow_wTree.get_widget('browser_list').set_model(None)
     model.clear()
     for item in browser_vars.current_playlist[1]:
       model.append([item])
@@ -148,6 +148,7 @@ def idle_loop():
     ###set things that are bound to change often :)
     mainwindow_wTree.get_widget('volume_scale').set_value(int(status['volume']))
     handle_toggles(status)
+    return True
   except: 
     checks.song=None
     mainwindow_wTree.get_widget('progressbar').set_text('not connected')

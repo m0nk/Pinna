@@ -63,13 +63,11 @@ def scrape_lyrics():
   if not lyrics == '\n':
     return format_text(lyrics)
   else:
-    #try:
-      print "tyring lyricwiki"
+    try:
       artist=infowindow_wTree.get_widget('artist_entry').get_text().replace(' ','_')
       title=infowindow_wTree.get_widget('title_entry').get_text().replace(' ','_')
       song=artist+':'+title
       url='http://lyrics.wikia.com/lyrics/'+song
-      print url
       u=urllib2.urlopen(url)
       data=u.read()
       u.close()
@@ -77,8 +75,8 @@ def scrape_lyrics():
       data=data[0:data.find('<!-- ')]
       data=data.replace('<br />','\n')
       return format_text(data)
-    #except:    
-     # return ''
+    except:    
+      return ''
 
 def format_text(data):
   charcters={'&#8216;':"'",'&#8217;':"'",'&#8220;':'"','&#8221;':'"','&#lt;':'<','&gt;':'>','&quot;':'"','&amp;':'&'}

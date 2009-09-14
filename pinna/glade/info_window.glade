@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.2 on Thu Sep 10 22:20:21 2009 -->
+<!--Generated with glade3 3.4.2 on Mon Sep 14 00:17:13 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="info_window">
     <property name="width_request">601</property>
@@ -132,6 +132,130 @@
           </widget>
           <packing>
             <property name="position">1</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+  <widget class="GtkWindow" id="window1">
+    <property name="width_request">156</property>
+    <property name="height_request">99</property>
+    <property name="resizable">False</property>
+    <child>
+      <widget class="GtkFixed" id="fixed2">
+        <property name="visible">True</property>
+        <child>
+          <widget class="GtkEntry" id="entry1">
+            <property name="width_request">266</property>
+            <property name="height_request">23</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="invisible_char">●</property>
+          </widget>
+          <packing>
+            <property name="x">61</property>
+            <property name="y">11</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkEntry" id="entry2">
+            <property name="width_request">266</property>
+            <property name="height_request">23</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="invisible_char">●</property>
+          </widget>
+          <packing>
+            <property name="x">61</property>
+            <property name="y">48</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkEntry" id="entry3">
+            <property name="width_request">266</property>
+            <property name="height_request">23</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="invisible_char">●</property>
+          </widget>
+          <packing>
+            <property name="x">61</property>
+            <property name="y">83</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkComboBox" id="combobox1">
+            <property name="width_request">100</property>
+            <property name="height_request">23</property>
+            <property name="visible">True</property>
+          </widget>
+          <packing>
+            <property name="x">61</property>
+            <property name="y">115</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkButton" id="button1">
+            <property name="width_request">94</property>
+            <property name="height_request">23</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="label" translatable="yes">serach</property>
+            <property name="response_id">0</property>
+          </widget>
+          <packing>
+            <property name="x">234</property>
+            <property name="y">115</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkLabel" id="label1">
+            <property name="width_request">75</property>
+            <property name="height_request">23</property>
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Artist</property>
+            <property name="wrap">True</property>
+            <property name="single_line_mode">True</property>
+          </widget>
+          <packing>
+            <property name="y">12</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkLabel" id="label2">
+            <property name="width_request">75</property>
+            <property name="height_request">23</property>
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Title</property>
+            <property name="wrap">True</property>
+          </widget>
+          <packing>
+            <property name="y">48</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkLabel" id="label3">
+            <property name="width_request">75</property>
+            <property name="height_request">23</property>
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Album</property>
+            <property name="wrap">True</property>
+          </widget>
+          <packing>
+            <property name="y">83</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkLabel" id="label4">
+            <property name="width_request">75</property>
+            <property name="height_request">23</property>
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Lyric Site</property>
+            <property name="wrap">True</property>
+          </widget>
+          <packing>
+            <property name="y">115</property>
           </packing>
         </child>
       </widget>

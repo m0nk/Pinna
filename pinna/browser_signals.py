@@ -15,7 +15,7 @@ def change_playlist():
         browser_vars.playlist_list[1].append(playlist['playlist'])
   if browser_vars.view=='playlist':
     model=browserwindow_wTree.get_widget('browser_list').get_model()
-    browserwindow_wTree.get_widget('browser_list').set_model()
+    browserwindow_wTree.get_widget('browser_list').set_model(None)
     model.clear()
     for item in browser_vars.playlist_list[1]:
       model.append([item])
@@ -58,7 +58,7 @@ def cancel_button(widget):
 
 def change_current():
   model=browserwindow_wTree.get_widget('browser_list').get_model()
-  browserwindow_wTree.get_widget('browser_list').set_model()
+  browserwindow_wTree.get_widget('browser_list').set_model(None)
   model.clear()
   if browser_vars.current_playlist[1]:
     for song in browser_vars.current_playlist[1]:
@@ -111,7 +111,7 @@ def current_clear(widget):
 def change_browser():  
   if browser_vars.browser_list[1]:
     model=browserwindow_wTree.get_widget('browser_list').get_model()
-    browserwindow_wTree.get_widget('browser_list').set_model()
+    browserwindow_wTree.get_widget('browser_list').set_model(None)
     model.clear()
     for song in browser_vars.browser_list[1]:
       model.append([song[1]])
@@ -155,7 +155,7 @@ def change_directory(new_directory):
       browser_vars.browser_list[1].append((file_type,display,file_name))
   if browser_vars.view=='file':
     model=browserwindow_wTree.get_widget('browser_list').get_model()
-    browserwindow_wTree.get_widget('browser_list').set_model()
+    browserwindow_wTree.get_widget('browser_list').set_model(None)
     model.clear()
     for item in browser_vars.browser_list[1]:
       model.append([item[1]])
@@ -186,7 +186,7 @@ def search(widget):
   query = browserwindow_wTree.get_widget('search_query').get_text()
   term = browserwindow_wTree.get_widget('search_item').get_active_text()
   model=browserwindow_wTree.get_widget('browser_list').get_model()
-  browserwindow_wTree.get_widget('browser_list').set_model()
+  browserwindow_wTree.get_widget('browser_list').set_model(None)
   model.clear()
   browser_vars.browser_list[0]=None
   browser_vars.browser_list[1]=[]
