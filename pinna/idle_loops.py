@@ -136,7 +136,6 @@ def idle_loop():
       if 'song' not in status:
         checks.song=None
         mainwindow_wTree.get_widget('main_window_album_art').set_from_pixbuf(default_albumart.scale_simple(80,80,gtk.gdk.INTERP_BILINEAR))
-        infowindow_wTree.get_widget('album_art').set_from_pixbuf(default_albumart)
         infowindow_wTree.get_widget('artist_entry').set_text('')
         infowindow_wTree.get_widget('title_entry').set_text('')
         infowindow_wTree.get_widget('album_entry').set_text('')
@@ -148,7 +147,6 @@ def idle_loop():
     ###set things that are bound to change often :)
     mainwindow_wTree.get_widget('volume_scale').set_value(int(status['volume']))
     handle_toggles(status)
-    return True
   except: 
     checks.song=None
     mainwindow_wTree.get_widget('progressbar').set_text('not connected')

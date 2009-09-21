@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.2 on Mon Sep 14 00:17:13 2009 -->
+<!--Generated with glade3 3.4.2 on Mon Sep 21 00:04:31 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="info_window">
     <property name="width_request">601</property>
@@ -16,101 +16,6 @@
         <child>
           <widget class="GtkFixed" id="fixed1">
             <property name="visible">True</property>
-            <child>
-              <widget class="GtkImage" id="album_art">
-                <property name="width_request">115</property>
-                <property name="height_request">115</property>
-                <property name="visible">True</property>
-                <property name="pixbuf">no_image.png</property>
-              </widget>
-            </child>
-            <child>
-              <widget class="GtkButton" id="lyric_button">
-                <property name="width_request">103</property>
-                <property name="height_request">25</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="label" translatable="yes">Lyrics</property>
-                <property name="response_id">0</property>
-                <signal name="clicked" handler="on_lyric_button_clicked"/>
-              </widget>
-              <packing>
-                <property name="x">125</property>
-                <property name="y">91</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkButton" id="info_button">
-                <property name="width_request">103</property>
-                <property name="height_request">25</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="label" translatable="yes">Artist Bio</property>
-                <property name="response_id">0</property>
-                <signal name="clicked" handler="on_info_button_clicked"/>
-              </widget>
-              <packing>
-                <property name="x">228</property>
-                <property name="y">91</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkButton" id="albumart_button">
-                <property name="width_request">103</property>
-                <property name="height_request">25</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="label" translatable="yes">Album Art</property>
-                <property name="response_id">0</property>
-                <signal name="clicked" handler="on_albumart_button_clicked"/>
-              </widget>
-              <packing>
-                <property name="x">331</property>
-                <property name="y">91</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkEntry" id="album_entry">
-                <property name="width_request">307</property>
-                <property name="height_request">20</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="invisible_char">●</property>
-              </widget>
-              <packing>
-                <property name="x">126</property>
-                <property name="y">56</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkEntry" id="title_entry">
-                <property name="width_request">307</property>
-                <property name="height_request">20</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="invisible_char">●</property>
-              </widget>
-              <packing>
-                <property name="x">126</property>
-                <property name="y">33</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkEntry" id="artist_entry">
-                <property name="width_request">307</property>
-                <property name="height_request">20</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="invisible_char">●</property>
-              </widget>
-              <packing>
-                <property name="x">126</property>
-                <property name="y">10</property>
-              </packing>
-            </child>
           </widget>
           <packing>
             <property name="expand">False</property>
@@ -124,9 +29,10 @@
             <child>
               <widget class="GtkTextView" id="info_textview">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
+                <property name="sensitive">False</property>
                 <property name="editable">False</property>
                 <property name="wrap_mode">GTK_WRAP_WORD</property>
+                <property name="cursor_visible">False</property>
               </widget>
             </child>
           </widget>
@@ -134,19 +40,77 @@
             <property name="position">1</property>
           </packing>
         </child>
+        <child>
+          <widget class="GtkHBox" id="hbox1">
+            <property name="visible">True</property>
+            <child>
+              <widget class="GtkButton" id="lyric_button">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="label" translatable="yes">Lyrics</property>
+                <property name="response_id">0</property>
+                <signal name="clicked" handler="on_lyric_button_clicked"/>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkButton" id="artist_button">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="label" translatable="yes">Artist Biography</property>
+                <property name="response_id">0</property>
+                <signal name="clicked" handler="on_artist_button_clicked"/>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkButton" id="search_button">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="label" translatable="yes">Search</property>
+                <property name="response_id">0</property>
+                <signal name="clicked" handler="on_search_button_clicked"/>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
       </widget>
     </child>
   </widget>
-  <widget class="GtkWindow" id="window1">
-    <property name="width_request">156</property>
-    <property name="height_request">99</property>
+  <widget class="GtkWindow" id="search_window">
+    <property name="title" translatable="yes">Pinna - Search</property>
     <property name="resizable">False</property>
+    <signal name="event" handler="on_search_window_event"/>
+    <signal name="delete_event" handler="on_search_window_delete_event"/>
     <child>
       <widget class="GtkFixed" id="fixed2">
         <property name="visible">True</property>
         <child>
-          <widget class="GtkEntry" id="entry1">
-            <property name="width_request">266</property>
+          <widget class="GtkEntry" id="artist_entry">
+            <property name="width_request">292</property>
             <property name="height_request">23</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
@@ -154,12 +118,11 @@
           </widget>
           <packing>
             <property name="x">61</property>
-            <property name="y">11</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkEntry" id="entry2">
-            <property name="width_request">266</property>
+          <widget class="GtkEntry" id="title_entry">
+            <property name="width_request">292</property>
             <property name="height_request">23</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
@@ -167,12 +130,12 @@
           </widget>
           <packing>
             <property name="x">61</property>
-            <property name="y">48</property>
+            <property name="y">27</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkEntry" id="entry3">
-            <property name="width_request">266</property>
+          <widget class="GtkEntry" id="album_entry">
+            <property name="width_request">292</property>
             <property name="height_request">23</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
@@ -180,33 +143,37 @@
           </widget>
           <packing>
             <property name="x">61</property>
-            <property name="y">83</property>
+            <property name="y">54</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkComboBox" id="combobox1">
+          <widget class="GtkComboBox" id="lyricsite">
             <property name="width_request">100</property>
-            <property name="height_request">23</property>
+            <property name="height_request">25</property>
             <property name="visible">True</property>
+            <property name="items">lyricsplugin
+lyricwiki
+</property>
           </widget>
           <packing>
             <property name="x">61</property>
-            <property name="y">115</property>
+            <property name="y">81</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkButton" id="button1">
+          <widget class="GtkButton" id="search_button">
             <property name="width_request">94</property>
-            <property name="height_request">23</property>
+            <property name="height_request">25</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <property name="label" translatable="yes">serach</property>
+            <property name="label" translatable="yes">Search</property>
             <property name="response_id">0</property>
+            <signal name="clicked" handler="on_search1_button_clicked"/>
           </widget>
           <packing>
-            <property name="x">234</property>
-            <property name="y">115</property>
+            <property name="x">259</property>
+            <property name="y">81</property>
           </packing>
         </child>
         <child>
@@ -218,9 +185,6 @@
             <property name="wrap">True</property>
             <property name="single_line_mode">True</property>
           </widget>
-          <packing>
-            <property name="y">12</property>
-          </packing>
         </child>
         <child>
           <widget class="GtkLabel" id="label2">
@@ -231,7 +195,7 @@
             <property name="wrap">True</property>
           </widget>
           <packing>
-            <property name="y">48</property>
+            <property name="y">27</property>
           </packing>
         </child>
         <child>
@@ -243,7 +207,7 @@
             <property name="wrap">True</property>
           </widget>
           <packing>
-            <property name="y">83</property>
+            <property name="y">54</property>
           </packing>
         </child>
         <child>
@@ -255,7 +219,24 @@
             <property name="wrap">True</property>
           </widget>
           <packing>
-            <property name="y">115</property>
+            <property name="y">81</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkComboBox" id="search_for">
+            <property name="width_request">96</property>
+            <property name="height_request">25</property>
+            <property name="visible">True</property>
+            <property name="items">All
+Album
+Lyrics
+Biography
+</property>
+            <signal name="changed" handler="on_search_for_changed"/>
+          </widget>
+          <packing>
+            <property name="x">162</property>
+            <property name="y">81</property>
           </packing>
         </child>
       </widget>

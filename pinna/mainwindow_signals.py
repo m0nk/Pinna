@@ -18,7 +18,6 @@ def show_info_window(widget):
  
 def stop(widget):
   client.stop()
-  print settings.stop_on_exit
   
 def previous(widget):
   client.previous() 

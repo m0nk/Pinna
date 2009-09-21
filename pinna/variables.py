@@ -17,6 +17,9 @@ class main_vars:
   shuffle_id=None
   repeat_id=None
   album_art='1'
+
+class info_vars:
+  view='lyrics'
   
 class browser_vars:
   view=None

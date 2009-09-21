@@ -1,0 +1,5 @@
+Installing pinna is very simple
+
+The only package required in ubuntu is python-mpd
+
+to install type (as root) 'python setup.py install'
