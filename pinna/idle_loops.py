@@ -136,10 +136,11 @@ def idle_loop():
       if 'song' not in status:
         checks.song=None
         mainwindow_wTree.get_widget('main_window_album_art').set_from_pixbuf(default_albumart.scale_simple(80,80,gtk.gdk.INTERP_BILINEAR))
+        infowindow_wTree.get_widget('info_textview').get_buffer().set_text('')
+        infowindow_wTree.get_widget('info_textview').get_buffer().insert_pixbuf(infowindow_wTree.get_widget('info_textview').get_buffer().get_iter_at_line_offset(0,0),default_albumart)
         infowindow_wTree.get_widget('artist_entry').set_text('')
         infowindow_wTree.get_widget('title_entry').set_text('')
         infowindow_wTree.get_widget('album_entry').set_text('')
-        infowindow_wTree.get_widget('info_textview').get_buffer().set_text('')
       mainwindow_wTree.get_widget('progressbar').set_text('00:00/00:00')
       mainwindow_wTree.get_widget('progressbar').set_fraction(0.0)
       if status['playlistlength']=='0':

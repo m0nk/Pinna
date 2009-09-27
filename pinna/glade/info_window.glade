@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.2 on Mon Sep 21 00:04:31 2009 -->
+<!--Generated with glade3 3.4.2 on Mon Sep 21 10:22:01 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="info_window">
     <property name="width_request">601</property>
@@ -103,7 +103,7 @@
   <widget class="GtkWindow" id="search_window">
     <property name="title" translatable="yes">Pinna - Search</property>
     <property name="resizable">False</property>
-    <signal name="event" handler="on_search_window_event"/>
+    <signal name="key_press_event" handler="on_search_window_key_press_event"/>
     <signal name="delete_event" handler="on_search_window_delete_event"/>
     <child>
       <widget class="GtkFixed" id="fixed2">

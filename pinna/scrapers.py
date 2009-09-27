@@ -13,19 +13,20 @@ def change_info():
     change_lyrics(None)
   if info_vars.view=='bio':
     change_biography(None)
+  
+def set_albumart(main=False):
+  song=client.currentsong()
+  pixbuf=default_albumart
   if 'artist' in song.keys() and 'album' in song.keys():
     song=song['artist']+':'+song['album']+'.jpg'
     song=song.lower().replace(' ','+')
     song=song.replace('/','+')
     check=os.getenv("HOME")+"/.pinna/album_art/"+song
     if os.path.isfile(check):
-      mainwindow_wTree.get_widget('main_window_album_art').set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(check).scale_simple(80,80,gtk.gdk.INTERP_BILINEAR))   
-      #infowindow_wTree.get_widget('info_textview').get_buffer().insert_pixbuf(infowindow_wTree.get_widget('info_textview').get_buffer().get_iter_at_line_offset(0,0),gtk.gdk.pixbuf_new_from_file(check))      
-    else:
-      mainwindow_wTree.get_widget('main_window_album_art').set_from_pixbuf(default_albumart.scale_simple(80,80,gtk.gdk.INTERP_BILINEAR))
-  else:
-    mainwindow_wTree.get_widget('main_window_album_art').set_from_pixbuf(default_albumart.scale_simple(80,80,gtk.gdk.INTERP_BILINEAR))
-
+      pixbuf = gtk.gdk.pixbuf_new_from_file(check)
+  mainwindow_wTree.get_widget('main_window_album_art').set_from_pixbuf(pixbuf.scale_simple(80,80,gtk.gdk.INTERP_BILINEAR))
+  infowindow_wTree.get_widget('info_textview').get_buffer().insert_pixbuf(infowindow_wTree.get_widget('info_textview').get_buffer().get_iter_at_line_offset(0,0),pixbuf)
+  
 def change_lyrics(widget):
   info_vars.view='lyrics'
   file_name=client.currentsong()['file'].split('/')
@@ -36,11 +37,12 @@ def change_lyrics(widget):
   if os.path.isfile(check):
     temp=open(check)
     lyrics=temp.read()
-    infowindow_wTree.get_widget('info_textview').get_buffer().set_text(lyrics)
+    infowindow_wTree.get_widget('info_textview').get_buffer().set_text('\n'+lyrics)
     temp.close()
   else:
     infowindow_wTree.get_widget('info_textview').get_buffer().set_text('')
-
+  set_albumart()
+  
 def change_biography(widget):
   info_vars.view='bio'
   song=client.currentsong()
@@ -48,10 +50,11 @@ def change_biography(widget):
   artist=artist.lower().replace('/','+')
   if os.path.isfile(os.getenv("HOME")+'/.pinna/bios/'+artist):
     temp=open(os.getenv("HOME")+'/.pinna/bios/'+artist)
-    infowindow_wTree.get_widget('info_textview').get_buffer().set_text(temp.read())
+    infowindow_wTree.get_widget('info_textview').get_buffer().set_text('\n'+temp.read())
     temp.close()
   else:
     infowindow_wTree.get_widget('info_textview').get_buffer().set_text('')
+  set_albumart()
   
 def format_text(data):
   charcters={'&#8216;':"'",'&#8217;':"'",'&#8220;':'"','&#8221;':'"','&#lt;':'<','&gt;':'>','&quot;':'"','&amp;':'&'}
@@ -136,7 +139,7 @@ def save_lyrics(lyrics):
   temp=open(file_name,'w')
   temp.write(lyrics)
   temp.close()
-  infowindow_wTree.get_widget('info_textview').get_buffer().set_text(lyrics)
+  change_lyrics(None)
 
 def save_albumart(artwork):
   song=client.currentsong()
@@ -148,7 +151,8 @@ def save_albumart(artwork):
   temp=open(file_name,'w')
   temp.write(artwork)
   temp.close()
-
+  set_albumart()
+  
 def scrape_albumart():
   song=client.currentsong()
   file_name=song['artist']+':'+song['album']+'.jpg'
@@ -173,11 +177,14 @@ def scrape_albumart():
     u=urllib2.urlopen(data)
     picture=u.read()
     u.close()
+    '''
     image_file=open(os.getenv("HOME")+"/.pinna/album_art/"+file_name, 'w')
     image_file.write(picture)
     image_file.close()
     mainwindow_wTree.get_widget("main_window_album_art").set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(os.getenv("HOME")+"/.pinna/album_art/"+file_name).scale_simple(80,80,gtk.gdk.INTERP_BILINEAR))
-
+    '''
+    save_albumart(picture)
+    
 def search(widget):
   if infowindow_wTree.get_widget('search_for').get_active()==0:
     try:
@@ -215,6 +222,10 @@ def search_for_changed(widget):
   else:
     infowindow_wTree.get_widget('lyricsite').set_sensitive(True)
 
+def searchwindow_event(widget,event):
+  if event.keyval==65307:
+    close_searchwindow(widget,event)
+
 def infowindow_event(widget,event):
   if event.keyval==65307:
     close_infowindow(widget,event)
@@ -239,7 +250,7 @@ if not os.path.isdir(os.getenv("HOME")+'/.pinna/lyrics'):
   os.mkdir(os.getenv("HOME")+'/.pinna/lyrics')
 
 buttons={'on_lyric_button_clicked':change_lyrics,'on_artist_button_clicked':change_biography,'on_search_button_clicked':showsearch_window,'on_info_window_delete_event':close_infowindow,'on_info_window_key_press_event':infowindow_event}
-search_buttons={'on_search1_button_clicked':search,'on_search_window_delete_event':close_searchwindow,'on_search_for_changed':search_for_changed}
+search_buttons={'on_search1_button_clicked':search,'on_search_window_delete_event':close_searchwindow,'on_search_for_changed':search_for_changed,'on_search_window_key_press_event':searchwindow_event}
 
 infowindow_wTree.get_widget('lyricsite').set_active(0)
 infowindow_wTree.get_widget('search_for').set_active(0)
