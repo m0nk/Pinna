@@ -94,7 +94,7 @@ def save_artistbio(bio,show):
   if show==True:
     info_vars.view='bio'
     infowindow_wTree.get_widget('info_textview').get_buffer().set_text(bio)
-
+ 
 def scrape_lyricwiki():
   artist=infowindow_wTree.get_widget('artist_entry').get_text().replace(' ','_')
   title=infowindow_wTree.get_widget('title_entry').get_text().replace(' ','_')
@@ -147,10 +147,10 @@ def save_albumart(artwork):
   file_name=file_name.lower().replace(' ','+')
   file_name=file_name.replace('/','+')
   file_name=os.getenv("HOME")+'/.pinna/album_art/'+file_name+'.jpg'
-  
   temp=open(file_name,'w')
   temp.write(artwork)
   temp.close()
+  infowindow_wTree.get_widget('info_textview').get_buffer().delete(infowindow_wTree.get_widget('info_textview').get_buffer().get_iter_at_line_offset(0,0),infowindow_wTree.get-widget('info_textview').get_buffer().get_iter_at_line_offset(0,1))
   set_albumart()
   
 def scrape_albumart():

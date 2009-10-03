@@ -8,25 +8,15 @@ from connection import client
 #playlist code
 
 def change_playlist():
-  if not browser_vars.playlist_list[1]:
-    playlists=client.lsinfo('')
-    for playlist in playlists:
-      if 'playlist' in playlist.keys():
-        browser_vars.playlist_list[1].append(playlist['playlist'])
-  if browser_vars.view=='playlist':
-    model=browserwindow_wTree.get_widget('browser_list').get_model()
-    browserwindow_wTree.get_widget('browser_list').set_model(None)
-    model.clear()
-    for item in browser_vars.playlist_list[1]:
-      model.append([item])
-    browserwindow_wTree.get_widget('browser_list').set_model(model)  
-    if browser_vars.playlist_list[0]:
-      adj=browserwindow_wTree.get_widget('browser_scroll').get_vadjustment()
-      adj.lower=browser_vars.playlist_list[0][0]
-      adj.upper=browser_vars.playlist_list[0][3]-browser_vars.current_playlist[0][2]+browser_vars.current_playlist[0][0]
-      adj.value=browser_vars.playlist_list[0][0]
-      adj.page_size=browser_vars.playlist_list[0][1]
-       
+  playlists=client.lsinfo('')
+  model=browserwindow_wTree.get_widget('browser_list').get_model()
+  model.clear()
+  browserwindow_wTree.get_widget('browser_list').set_model(None)
+  for playlist in playlists:
+    if 'playlist' in playlist.keys():
+      model.append([playlist['playlist']])
+  browserwindow_wTree.get_widget('browser_list').set_model(model)
+
 def add_playlist(widget):
   client.clear()
   selection=browserwindow_wTree.get_widget('browser_list').get_selection().get_selected_rows()[1][0][0]
