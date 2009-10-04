@@ -104,8 +104,12 @@ def scrape_lyricwiki():
     u=urllib2.urlopen(url)
     data=u.read()
     u.close()
-    data=data[data.find("<div class='lyricbox' >")+23:len(data)]
-    data=data[0:data.find('<!-- ')]
+    if data.find("<div class='lyricbox' >")>-1:
+      data=data[data.find("<div class='lyricbox' >")+23:len(data)]
+      data=data[0:data.find('<!-- ')]
+    else:
+      data=data[data.find("<div class='lyricbox'>"):len(data)]
+      data=data[data.find("</div>")+6:data.find('<!--')]
     data=data.replace('<br />','\n')
     save_lyrics(format_text(data))
   except:
@@ -150,7 +154,7 @@ def save_albumart(artwork):
   temp=open(file_name,'w')
   temp.write(artwork)
   temp.close()
-  infowindow_wTree.get_widget('info_textview').get_buffer().delete(infowindow_wTree.get_widget('info_textview').get_buffer().get_iter_at_line_offset(0,0),infowindow_wTree.get-widget('info_textview').get_buffer().get_iter_at_line_offset(0,1))
+  infowindow_wTree.get_widget('info_textview').get_buffer().delete(infowindow_wTree.get_widget('info_textview').get_buffer().get_iter_at_line_offset(0,0),infowindow_wTree.get_widget('info_textview').get_buffer().get_iter_at_line_offset(0,1))
   set_albumart()
   
 def scrape_albumart():
@@ -177,12 +181,6 @@ def scrape_albumart():
     u=urllib2.urlopen(data)
     picture=u.read()
     u.close()
-    '''
-    image_file=open(os.getenv("HOME")+"/.pinna/album_art/"+file_name, 'w')
-    image_file.write(picture)
-    image_file.close()
-    mainwindow_wTree.get_widget("main_window_album_art").set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(os.getenv("HOME")+"/.pinna/album_art/"+file_name).scale_simple(80,80,gtk.gdk.INTERP_BILINEAR))
-    '''
     save_albumart(picture)
     
 def search(widget):

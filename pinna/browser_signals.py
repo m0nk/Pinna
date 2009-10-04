@@ -8,6 +8,7 @@ from connection import client
 #playlist code
 
 def change_playlist():
+  browser_vars.playlist_list=[None,[]]
   playlists=client.lsinfo('')
   model=browserwindow_wTree.get_widget('browser_list').get_model()
   model.clear()
@@ -15,6 +16,7 @@ def change_playlist():
   for playlist in playlists:
     if 'playlist' in playlist.keys():
       model.append([playlist['playlist']])
+      browser_vars.playlist_list[1].append(playlist['playlist'])
   browserwindow_wTree.get_widget('browser_list').set_model(model)
 
 def add_playlist(widget):
