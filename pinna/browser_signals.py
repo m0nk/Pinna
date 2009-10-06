@@ -86,7 +86,6 @@ def create_playlist_ok(widget):
   browserwindow_wTree.get_widget('ask_user_input').hide()
   browserwindow_wTree.get_widget('user_input_entry').set_text('')
   browser_vars.playlist_list[1].append(playlist_name)
-  change_playlist()
   return True
   
 def create_playlist_cancel(widget):

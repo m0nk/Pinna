@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.2 on Mon Sep 21 10:22:01 2009 -->
+<!--Generated with glade3 3.4.2 on Mon Oct  5 23:26:37 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="info_window">
     <property name="width_request">601</property>
@@ -135,7 +135,7 @@
         </child>
         <child>
           <widget class="GtkEntry" id="album_entry">
-            <property name="width_request">292</property>
+            <property name="width_request">196</property>
             <property name="height_request">23</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
@@ -237,6 +237,81 @@ Biography
           <packing>
             <property name="x">162</property>
             <property name="y">81</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkButton" id="from_file">
+            <property name="width_request">94</property>
+            <property name="height_request">25</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="label" translatable="yes">From File</property>
+            <property name="response_id">0</property>
+            <signal name="clicked" handler="on_from_file_clicked"/>
+          </widget>
+          <packing>
+            <property name="x">259</property>
+            <property name="y">54</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+  <widget class="GtkFileChooserDialog" id="filechooser">
+    <property name="border_width">5</property>
+    <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
+    <property name="deletable">False</property>
+    <property name="has_separator">False</property>
+    <signal name="delete_event" handler="on_filechooser_delete_event"/>
+    <child internal-child="vbox">
+      <widget class="GtkVBox" id="dialog-vbox1">
+        <property name="visible">True</property>
+        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+        <property name="spacing">2</property>
+        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+        <child>
+          <placeholder/>
+        </child>
+        <child internal-child="action_area">
+          <widget class="GtkHButtonBox" id="dialog-action_area1">
+            <property name="visible">True</property>
+            <property name="layout_style">GTK_BUTTONBOX_END</property>
+            <child>
+              <widget class="GtkButton" id="file_cancel">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="label" translatable="yes">gtk-cancel</property>
+                <property name="use_stock">True</property>
+                <property name="response_id">2</property>
+                <signal name="clicked" handler="on_file_cancel_clicked"/>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkButton" id="file_ok">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="label" translatable="yes">gtk-ok</property>
+                <property name="use_stock">True</property>
+                <property name="response_id">0</property>
+                <signal name="clicked" handler="on_file_ok_clicked"/>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="pack_type">GTK_PACK_END</property>
           </packing>
         </child>
       </widget>

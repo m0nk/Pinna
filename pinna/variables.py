@@ -7,7 +7,8 @@ class settings:
   mpd_host='127.0.0.1'
   mpd_port='6600'
   mpd_pass= ''
-  
+  music_directory= ''
+
 class checks:
   song=None
   shuffle='0'

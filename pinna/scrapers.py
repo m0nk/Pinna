@@ -1,11 +1,14 @@
 import urllib2
 import os
 import gtk
+import Image
+
 from connection import client
 from ui import mainwindow_wTree
 from ui import infowindow_wTree
 from ui import default_albumart
 from variables import info_vars
+from variables import settings 
 
 def change_info():
   song=client.currentsong()
@@ -13,8 +16,14 @@ def change_info():
     change_lyrics(None)
   if info_vars.view=='bio':
     change_biography(None)
+  if 'album' in song.keys() and 'artist' in song.keys():
+    infowindow_wTree.get_widget('album_entry').set_sensitive(True)
+    infowindow_wTree.get_widget('from_file').set_sensitive(True)
+  else:
+    infowindow_wTree.get_widget('album_entry').set_sensitive(False)
+    infowindow_wTree.get_widget('from_file').set_sensitive(False)
   
-def set_albumart(main=False):
+def set_albumart(main=True):
   song=client.currentsong()
   pixbuf=default_albumart
   if 'artist' in song.keys() and 'album' in song.keys():
@@ -24,7 +33,8 @@ def set_albumart(main=False):
     check=os.getenv("HOME")+"/.pinna/album_art/"+song
     if os.path.isfile(check):
       pixbuf = gtk.gdk.pixbuf_new_from_file(check)
-  mainwindow_wTree.get_widget('main_window_album_art').set_from_pixbuf(pixbuf.scale_simple(80,80,gtk.gdk.INTERP_BILINEAR))
+  if main==True:
+    mainwindow_wTree.get_widget('main_window_album_art').set_from_pixbuf(pixbuf.scale_simple(80,80,gtk.gdk.INTERP_BILINEAR))
   infowindow_wTree.get_widget('info_textview').get_buffer().insert_pixbuf(infowindow_wTree.get_widget('info_textview').get_buffer().get_iter_at_line_offset(0,0),pixbuf)
   
 def change_lyrics(widget):
@@ -57,7 +67,7 @@ def change_biography(widget):
   set_albumart()
   
 def format_text(data):
-  charcters={'&#8216;':"'",'&#8217;':"'",'&#8220;':'"','&#8221;':'"','&#lt;':'<','&gt;':'>','&quot;':'"','&amp;':'&'}
+  charcters={'&#8216;':"'",'&#8217;':"'",'&#8220;':'"','&#8221;':'"','&#lt;':'<','&gt;':'>','&quot;':'"','&amp;':'&','&nbsp;':'','&quot;':"'"}
   for charcter in charcters.keys():
     data=data.replace(charcter,charcters[charcter])
   new_data=""
@@ -247,11 +257,56 @@ if not os.path.isdir(os.getenv("HOME")+'/.pinna/album_art'):
 if not os.path.isdir(os.getenv("HOME")+'/.pinna/lyrics'):
   os.mkdir(os.getenv("HOME")+'/.pinna/lyrics')
 
+def initiate_filechooser(first=False):
+  chooser=infowindow_wTree.get_widget('filechooser')
+  if first==True:
+    file_filter=gtk.FileFilter()
+    file_filter.set_name('Images')
+    file_filter.add_mime_type("image/png")
+    file_filter.add_mime_type("image/jpg")
+    file_filter.add_pattern("*.jpg")
+    file_filter.add_pattern("*.gif")
+    file_filter.add_pattern("*.bmp")
+    chooser.add_filter(file_filter)
+  if settings.music_directory:
+    chooser.set_current_folder(settings.music_directory)
+  else:
+    chooser.set_current_folder(os.getenv("HOME"))
+
+def filechooser_ok(widget):
+  song=client.currentsong()
+  song=song['artist']+':'+song['album']+'.jpg'
+  song=song.lower().replace(' ','+')
+  song=song.replace('/','+')
+  width=150
+  height=150
+  image_file=Image.open(infowindow_wTree.get_widget('filechooser').get_filename())
+  infowindow_wTree.get_widget('info_textview').get_buffer().delete(infowindow_wTree.get_widget('info_textview').get_buffer().get_iter_at_line_offset(0,0),infowindow_wTree.get_widget('info_textview').get_buffer().get_iter_at_line_offset(0,1))
+
+  new_image=image_file.resize((width, height), Image.ANTIALIAS)
+  new_image.save(os.getenv("HOME")+'/.pinna/album_art/'+song)
+  set_albumart()
+  infowindow_wTree.get_widget('filechooser').hide()
+  initiate_filechooser()
+  return True
+
+def show_filechooser(widget):
+  infowindow_wTree.get_widget('filechooser').show()
+
+def close_filechooser(widget,event=None):
+  infowindow_wTree.get_widget('filechooser').hide()
+  initiate_filechooser()
+  return True
+
+initiate_filechooser(True)
+
 buttons={'on_lyric_button_clicked':change_lyrics,'on_artist_button_clicked':change_biography,'on_search_button_clicked':showsearch_window,'on_info_window_delete_event':close_infowindow,'on_info_window_key_press_event':infowindow_event}
-search_buttons={'on_search1_button_clicked':search,'on_search_window_delete_event':close_searchwindow,'on_search_for_changed':search_for_changed,'on_search_window_key_press_event':searchwindow_event}
+search_buttons={'on_search1_button_clicked':search,'on_search_window_delete_event':close_searchwindow,'on_search_for_changed':search_for_changed,'on_search_window_key_press_event':searchwindow_event,'on_from_file_clicked':show_filechooser}
+filechooser_buttons={'on_filechooser_delete_event':close_filechooser,'on_file_ok_clicked':filechooser_ok,'on_file_cancel_clicked':close_filechooser}
 
 infowindow_wTree.get_widget('lyricsite').set_active(0)
 infowindow_wTree.get_widget('search_for').set_active(0)
 
 infowindow_wTree.signal_autoconnect(search_buttons)
 infowindow_wTree.signal_autoconnect(buttons)
+infowindow_wTree.signal_autoconnect(filechooser_buttons)

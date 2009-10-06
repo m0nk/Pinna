@@ -23,6 +23,8 @@ def read_config():
         settings.alarm_minute=line[1].split(":")[1]
       if line[0]=='alarm_volume':
         settings.alarm_volume=line[1]
+      if line[0]=='music_directory':
+        settings.music_directory=line[1]
     temp.close()
     insert_config()
   else:
