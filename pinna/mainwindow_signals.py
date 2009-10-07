@@ -46,9 +46,7 @@ def repeat(widget):
     client.repeat(0)
 
 def change_volume(widget,value):
-  current_volume=int(client.status()['volume'])
-  new_volume=int(value)
-  client.volume(str(new_volume-current_volume))
+  client.setvol(int(value))
 
 def song_scroll(widget,click):
   click=click.x

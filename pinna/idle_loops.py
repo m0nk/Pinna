@@ -106,7 +106,7 @@ def check_alarm():
   alarm_time=(settings.alarm_hour,settings.alarm_minute)
   if real_time[2]==0:
     if real_time[0]==int(alarm_time[0]) and real_time[1]==int(alarm_time[1]):
-      client.volume(int(settings.alarm_volume)-int(client.status()['volume']))
+      client.setvol(int(settings.alarm_volume))
       client.clear()
       client.load('alarm')
       client.play()

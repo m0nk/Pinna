@@ -79,6 +79,7 @@ def save_config(widget):
   temp.write('alarm_enable = '+settings.alarm_enable+"\n")
   temp.write('alarm_time = '+settings.alarm_hour+':'+settings.alarm_minute+"\n")
   temp.write('alarm_volume = '+settings.alarm_volume+"\n")
+  temp.write('music_directory = '+settings.music_directory+'\n')
   temp.close()
   read_config()
 
