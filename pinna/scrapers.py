@@ -118,8 +118,9 @@ def scrape_lyricwiki():
       data=data[data.find("<div class='lyricbox' >")+23:len(data)]
       data=data[0:data.find('<!-- ')]
     else:
-      data=data[data.find("<div class='lyricbox'>"):len(data)]
-      data=data[data.find("</div>")+6:data.find('<!--')]
+      data=data[data.find("<div class='lyricbox'>"):]
+      data=data[data.find("</div>")+6:]
+      data= data[:data.find('<!--')]
     data=data.replace('<br />','\n')
     save_lyrics(format_text(data))
   except:
