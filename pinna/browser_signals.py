@@ -196,7 +196,7 @@ def search(widget):
  
 #bs 
 def close_browser(widget,event):
-  browserwindow_wTree.get_widget('browser_window').hide()
+  browserwindow_wTree.get_widget('browser_window').hide_all()
   return True
 
 def disable_search():

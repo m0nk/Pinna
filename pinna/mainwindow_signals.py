@@ -8,13 +8,13 @@ from variables import checks
 from variables import main_vars
 
 def show_browser_window(widget):
-  browserwindow_wTree.get_widget('browser_window').show()
+  browserwindow_wTree.get_widget('browser_window').show_all()
 
 def show_settings_window(widget):
- settingswindow_wTree.get_widget('settings_window').show()
+ settingswindow_wTree.get_widget('settings_window').show_all()
  
 def show_info_window(widget):
-  infowindow_wTree.get_widget('info_window').show() 
+  infowindow_wTree.get_widget('info_window').show_all() 
  
 def stop(widget):
   client.stop()
@@ -70,7 +70,7 @@ def mainwindow_quit(widget,event):
   infowindow_wTree.get_widget('search_window'),
   infowindow_wTree.get_widget('filechooser')]
   for window in windows:
-      window.hide()
+      window.hide_all()
   return True
   
 def show_albumart():
@@ -129,7 +129,7 @@ def tray_clicked(widget):
      mainwindow_quit(None,None)
   else:
      main_vars.main_window=1
-     mainwindow_wTree.get_widget('windowMain').show()   
+     mainwindow_wTree.get_widget('windowMain').show_all()   
 
 buttons={'on_previous_button_clicked':previous,'on_next_button_clicked':next,'on_play_button_clicked':play,'on_stop_button_clicked':stop,
 'on_info_button_clicked':show_info_window,'on_browser_button_clicked':show_browser_window,'on_settings_button_clicked':show_settings_window,'tray_quit':tray_quit,

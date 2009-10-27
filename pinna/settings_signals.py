@@ -84,7 +84,7 @@ def save_config(widget):
   read_config()
 
 def close_window(widget,event):
-  settingswindow_wTree.get_widget('settings_window').hide()
+  settingswindow_wTree.get_widget('settings_window').hide_all()
   return True
   
 def hotkeys(widget,event):

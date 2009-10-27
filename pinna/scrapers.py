@@ -221,10 +221,10 @@ def search(widget):
     scrape_artistbio(True)
 
 def showsearch_window(widget):
-  infowindow_wTree.get_widget('search_window').show()
+  infowindow_wTree.get_widget('search_window').show_all()
 
 def close_infowindow(widget,event):
-  infowindow_wTree.get_widget('info_window').hide()
+  infowindow_wTree.get_widget('info_window').hide_all()
   return True
 
 def search_for_changed(widget):
@@ -248,7 +248,7 @@ def infowindow_event(widget,event):
     showsearch_window(widget)
 
 def close_searchwindow(widget,event):
-  infowindow_wTree.get_widget('search_window').hide()
+  infowindow_wTree.get_widget('search_window').hide_all()
   return True
 
 if not os.path.isdir(os.getenv("HOME")+'/.pinna'):
@@ -289,15 +289,15 @@ def filechooser_ok(widget):
   new_image=image_file.resize((width, height), Image.ANTIALIAS)
   new_image.save(os.getenv("HOME")+'/.pinna/album_art/'+song)
   set_albumart()
-  infowindow_wTree.get_widget('filechooser').hide()
+  infowindow_wTree.get_widget('filechooser').hide_all()
   initiate_filechooser()
   return True
 
 def show_filechooser(widget):
-  infowindow_wTree.get_widget('filechooser').show()
+  infowindow_wTree.get_widget('filechooser').show_all()
 
 def close_filechooser(widget,event=None):
-  infowindow_wTree.get_widget('filechooser').hide()
+  infowindow_wTree.get_widget('filechooser').hide_all()
   initiate_filechooser()
   return True
 

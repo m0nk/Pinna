@@ -18,6 +18,5 @@ infowindow_wTree=gtk.glade.XML(root_path+"glade/info_window.glade")
 
 default_albumart=gtk.gdk.pixbuf_new_from_file(root_path+"glade/no_image.png")
 
-tray_menu=gtk.glade.XML(root_path+"glade/tray_popup.glade")
 tray_icon=gtk.StatusIcon()
 tray_icon.set_from_file(root_path+'glade/no_image.png')

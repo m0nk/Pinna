@@ -1,112 +1,153 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.2 on Sun Sep 13 23:47:05 2009 -->
+<!--Generated with glade3 3.4.2 on Tue Oct 27 16:57:21 2009 -->
 <glade-interface>
   <widget class="GtkMenu" id="file_menu">
     <property name="visible">True</property>
     <child>
-      <widget class="GtkMenuItem" id="Open">
+      <widget class="GtkImageMenuItem" id="Open">
         <property name="visible">True</property>
         <property name="label" translatable="yes">Open</property>
         <property name="use_underline">True</property>
-        <signal name="activate_item" handler="open_clicked"/>
         <signal name="activate" handler="open_clicked"/>
+        <child internal-child="image">
+          <widget class="GtkImage" id="menu-item-image1">
+            <property name="visible">True</property>
+            <property name="stock">gtk-open</property>
+          </widget>
+        </child>
       </widget>
     </child>
     <child>
-      <widget class="GtkMenuItem" id="add">
+      <widget class="GtkImageMenuItem" id="add">
         <property name="visible">True</property>
         <property name="label" translatable="yes">add</property>
         <property name="use_underline">True</property>
-        <signal name="activate_item" handler="add_clicked"/>
-        <signal name="activate_item" handler="add_clicked"/>
         <signal name="activate" handler="add_clicked"/>
+        <child internal-child="image">
+          <widget class="GtkImage" id="menu-item-image2">
+            <property name="visible">True</property>
+            <property name="stock">gtk-add</property>
+          </widget>
+        </child>
       </widget>
     </child>
     <child>
-      <widget class="GtkMenuItem" id="Update_DB">
+      <widget class="GtkImageMenuItem" id="Update_DB">
         <property name="visible">True</property>
         <property name="label" translatable="yes">Update DB</property>
         <property name="use_underline">True</property>
-        <signal name="activate_item" handler="update_DB_clicked"/>
         <signal name="activate" handler="update_DB_clicked"/>
+        <child internal-child="image">
+          <widget class="GtkImage" id="menu-item-image3">
+            <property name="visible">True</property>
+            <property name="stock">gtk-refresh</property>
+          </widget>
+        </child>
       </widget>
     </child>
   </widget>
   <widget class="GtkMenu" id="current_menu">
     <property name="visible">True</property>
     <child>
-      <widget class="GtkMenuItem" id="play">
+      <widget class="GtkImageMenuItem" id="play">
         <property name="visible">True</property>
         <property name="label" translatable="yes">play</property>
         <property name="use_underline">True</property>
-        <signal name="activate_item" handler="play_clicked"/>
         <signal name="activate" handler="play_clicked"/>
+        <child internal-child="image">
+          <widget class="GtkImage" id="menu-item-image4">
+            <property name="visible">True</property>
+            <property name="stock">gtk-media-play</property>
+          </widget>
+        </child>
       </widget>
     </child>
     <child>
-      <widget class="GtkMenuItem" id="create_playlist">
+      <widget class="GtkImageMenuItem" id="create_playlist">
         <property name="visible">True</property>
         <property name="label" translatable="yes">create playlist</property>
         <property name="use_underline">True</property>
-        <signal name="activate_item" handler="create_playlist_clicked"/>
         <signal name="activate" handler="create_playlist_clicked"/>
+        <child internal-child="image">
+          <widget class="GtkImage" id="menu-item-image5">
+            <property name="visible">True</property>
+            <property name="stock">gtk-save</property>
+          </widget>
+        </child>
       </widget>
     </child>
     <child>
-      <widget class="GtkMenuItem" id="delete">
+      <widget class="GtkImageMenuItem" id="delete">
         <property name="visible">True</property>
         <property name="label" translatable="yes">delete</property>
         <property name="use_underline">True</property>
-        <signal name="activate_item" handler="delete_clicked"/>
         <signal name="activate" handler="delete_clicked"/>
+        <child internal-child="image">
+          <widget class="GtkImage" id="menu-item-image7">
+            <property name="visible">True</property>
+            <property name="stock">gtk-delete</property>
+          </widget>
+        </child>
       </widget>
     </child>
     <child>
-      <widget class="GtkMenuItem" id="clear">
+      <widget class="GtkImageMenuItem" id="clear">
         <property name="visible">True</property>
         <property name="label" translatable="yes">clear</property>
         <property name="use_underline">True</property>
-        <signal name="activate_item" handler="clear_clicked"/>
         <signal name="activate" handler="clear_clicked"/>
-      </widget>
-    </child>
-    <child>
-      <widget class="GtkMenuItem" id="update">
-        <property name="label" translatable="yes">update</property>
-        <property name="use_underline">True</property>
-        <signal name="activate_item" handler="update_clicked"/>
-        <signal name="activate" handler="update_clicked"/>
+        <child internal-child="image">
+          <widget class="GtkImage" id="menu-item-image6">
+            <property name="visible">True</property>
+            <property name="stock">gtk-clear</property>
+          </widget>
+        </child>
       </widget>
     </child>
   </widget>
   <widget class="GtkMenu" id="playlist_menu">
     <property name="visible">True</property>
     <child>
-      <widget class="GtkMenuItem" id="add_playlist">
+      <widget class="GtkImageMenuItem" id="add_playlist">
         <property name="visible">True</property>
-        <property name="label" translatable="yes">add</property>
+        <property name="label" translatable="yes">Play</property>
         <property name="use_underline">True</property>
-        <signal name="activate_item" handler="add_playlist_clicked"/>
         <signal name="activate" handler="add_playlist_clicked"/>
+        <child internal-child="image">
+          <widget class="GtkImage" id="menu-item-image8">
+            <property name="visible">True</property>
+            <property name="stock">gtk-media-play</property>
+          </widget>
+        </child>
       </widget>
     </child>
     <child>
-      <widget class="GtkMenuItem" id="merge_playlist">
+      <widget class="GtkImageMenuItem" id="merge_playlist">
         <property name="visible">True</property>
-        <property name="label" translatable="yes">merge</property>
+        <property name="label" translatable="yes">Merge</property>
         <property name="use_underline">True</property>
-        <signal name="activate_item" handler="merge_playlist_clicked"/>
         <signal name="activate" handler="merge_playlist_clicked"/>
+        <child internal-child="image">
+          <widget class="GtkImage" id="menu-item-image9">
+            <property name="visible">True</property>
+            <property name="stock">gtk-add</property>
+          </widget>
+        </child>
       </widget>
     </child>
     <child>
-      <widget class="GtkMenuItem" id="delete_playlist">
+      <widget class="GtkImageMenuItem" id="delete_playlist">
         <property name="visible">True</property>
-        <property name="label" translatable="yes">delete</property>
+        <property name="label" translatable="yes">Delete</property>
         <property name="use_underline">True</property>
-        <signal name="activate_item" handler="delete_playlist_clicked"/>
         <signal name="activate" handler="delete_playlist_clicked"/>
+        <child internal-child="image">
+          <widget class="GtkImage" id="menu-item-image10">
+            <property name="visible">True</property>
+            <property name="stock">gtk-delete</property>
+          </widget>
+        </child>
       </widget>
     </child>
   </widget>
