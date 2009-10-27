@@ -1,0 +1,9 @@
+from ui import tray_icon
+
+def action(widget,x,y):
+  print widget
+  print x
+  print y
+  print 'dicks'
+
+tray_icon.connect('popup-menu',action)

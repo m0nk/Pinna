@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.2 on Fri Sep 11 13:09:00 2009 -->
+<!--Generated with glade3 3.4.2 on Tue Oct 27 01:04:21 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="windowMain">
-    <property name="width_request">333</property>
-    <property name="height_request">145</property>
+    <property name="width_request">335</property>
+    <property name="height_request">150</property>
     <property name="visible">True</property>
     <property name="can_focus">True</property>
     <property name="has_default">True</property>
@@ -21,7 +21,7 @@
     <child>
       <widget class="GtkLayout" id="layout1">
         <property name="width_request">359</property>
-        <property name="height_request">143</property>
+        <property name="height_request">150</property>
         <property name="visible">True</property>
         <property name="width">359</property>
         <property name="height">143</property>
@@ -140,7 +140,7 @@
         <child>
           <widget class="GtkButton" id="info_button">
             <property name="width_request">40</property>
-            <property name="height_request">26</property>
+            <property name="height_request">28</property>
             <property name="visible">True</property>
             <property name="label" translatable="yes">Info</property>
             <property name="focus_on_click">False</property>
@@ -149,13 +149,13 @@
           </widget>
           <packing>
             <property name="x">62</property>
-            <property name="y">116</property>
+            <property name="y">119</property>
           </packing>
         </child>
         <child>
           <widget class="GtkButton" id="settings_button">
             <property name="width_request">65</property>
-            <property name="height_request">26</property>
+            <property name="height_request">28</property>
             <property name="visible">True</property>
             <property name="label" translatable="yes">settings</property>
             <property name="focus_on_click">False</property>
@@ -164,13 +164,13 @@
           </widget>
           <packing>
             <property name="x">103</property>
-            <property name="y">116</property>
+            <property name="y">119</property>
           </packing>
         </child>
         <child>
           <widget class="GtkButton" id="browser_button">
             <property name="width_request">62</property>
-            <property name="height_request">26</property>
+            <property name="height_request">28</property>
             <property name="visible">True</property>
             <property name="label" translatable="yes">browser</property>
             <property name="focus_on_click">False</property>
@@ -178,13 +178,13 @@
             <signal name="clicked" handler="on_browser_button_clicked"/>
           </widget>
           <packing>
-            <property name="y">116</property>
+            <property name="y">119</property>
           </packing>
         </child>
         <child>
           <widget class="GtkToggleButton" id="shuffle_button">
             <property name="width_request">60</property>
-            <property name="height_request">26</property>
+            <property name="height_request">28</property>
             <property name="visible">True</property>
             <property name="resize_mode">GTK_RESIZE_IMMEDIATE</property>
             <property name="label" translatable="yes">Shuffle</property>
@@ -194,13 +194,13 @@
           </widget>
           <packing>
             <property name="x">206</property>
-            <property name="y">116</property>
+            <property name="y">119</property>
           </packing>
         </child>
         <child>
           <widget class="GtkToggleButton" id="repeat_button">
             <property name="width_request">60</property>
-            <property name="height_request">26</property>
+            <property name="height_request">28</property>
             <property name="visible">True</property>
             <property name="label" translatable="yes">Repeat</property>
             <property name="focus_on_click">False</property>
@@ -209,7 +209,7 @@
           </widget>
           <packing>
             <property name="x">273</property>
-            <property name="y">116</property>
+            <property name="y">119</property>
           </packing>
         </child>
         <child>
@@ -236,6 +236,49 @@
             <property name="icon_size">6</property>
           </widget>
         </child>
+      </widget>
+    </child>
+  </widget>
+  <widget class="GtkMenu" id="tray_menu">
+    <property name="visible">True</property>
+    <child>
+      <widget class="GtkMenuItem" id="play">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">play</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="on_play_button_clicked"/>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="Stop">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Stop</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="on_stop_button_clicked"/>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="Next">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Next</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="on_next_button_clicked"/>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="Previous">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Previous</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="on_previous_button_clicked"/>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="Quit">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Quit</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="tray_quit"/>
       </widget>
     </child>
   </widget>

@@ -281,8 +281,8 @@ def filechooser_ok(widget):
   song=song['artist']+':'+song['album']+'.jpg'
   song=song.lower().replace(' ','+')
   song=song.replace('/','+')
-  width=240
-  height=240
+  width=115
+  height=115
   image_file=Image.open(infowindow_wTree.get_widget('filechooser').get_filename())
   infowindow_wTree.get_widget('info_textview').get_buffer().delete(infowindow_wTree.get_widget('info_textview').get_buffer().get_iter_at_line_offset(0,0),infowindow_wTree.get_widget('info_textview').get_buffer().get_iter_at_line_offset(0,1))
 

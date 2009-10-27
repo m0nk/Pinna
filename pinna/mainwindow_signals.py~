@@ -131,6 +131,10 @@ def tray_clicked(widget):
      main_vars.main_window=1
      mainwindow_wTree.get_widget('windowMain').show()   
 
+def tray_event(wdiget,event):
+  print widget
+  print event
+
 buttons={'on_previous_button_clicked':previous,'on_next_button_clicked':next,'on_play_button_clicked':play,'on_stop_button_clicked':stop,
 'on_info_button_clicked':show_info_window,'on_browser_button_clicked':show_browser_window,'on_settings_button_clicked':show_settings_window,'tray_quit':tray_quit,
 'dicks':change_volume,'on_progressbar_button_press_event':song_scroll,'on_windowMain_delete_event':mainwindow_quit,'on_windowMain_key_press_event':hotkeys}
@@ -144,4 +148,4 @@ main_vars.repeat_id=temp.connect("toggled",repeat)
 
 tray_icon.connect("activate",tray_clicked)
 tray_icon.connect('popup-menu',tray_popup)
-
+tray_icon.connect('event',tray_event)
