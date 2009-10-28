@@ -67,10 +67,10 @@ def mainwindow_quit(widget,event):
   browserwindow_wTree.get_widget('ask_yes_no'),
   infowindow_wTree.get_widget('info_window'),
   settingswindow_wTree.get_widget('settings_window'),
-  infowindow_wTree.get_widget('search_window'),
-  infowindow_wTree.get_widget('filechooser')]
+  infowindow_wTree.get_widget('search_window')]
   for window in windows:
       window.hide_all()
+  infowindow_wTree.get_widget('filechooser').hide()
   return True
   
 def show_albumart():

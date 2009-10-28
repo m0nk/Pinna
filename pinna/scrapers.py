@@ -121,8 +121,13 @@ def scrape_lyricwiki():
       data=data[data.find("<div class='lyricbox'>"):]
       data=data[data.find("</div>")+6:]
       data= data[:data.find('<!--')]
-    data=data.replace('<br />','\n')
-    save_lyrics(format_text(data))
+    data=data.replace('<br />','&#10;')
+    lyrics=''
+    data=data.split(';')
+    data.pop(len(data)-1)
+    for charcter in data:
+      lyrics+=chr(int(charcter[2:len(charcter)]))
+    save_lyrics(lyrics)
   except:
     save_lyrics('')
 
@@ -289,15 +294,15 @@ def filechooser_ok(widget):
   new_image=image_file.resize((width, height), Image.ANTIALIAS)
   new_image.save(os.getenv("HOME")+'/.pinna/album_art/'+song)
   set_albumart()
-  infowindow_wTree.get_widget('filechooser').hide_all()
+  infowindow_wTree.get_widget('filechooser').hide()
   initiate_filechooser()
   return True
 
 def show_filechooser(widget):
-  infowindow_wTree.get_widget('filechooser').show_all()
+  infowindow_wTree.get_widget('filechooser').show()
 
 def close_filechooser(widget,event=None):
-  infowindow_wTree.get_widget('filechooser').hide_all()
+  infowindow_wTree.get_widget('filechooser').hide()
   initiate_filechooser()
   return True
 
