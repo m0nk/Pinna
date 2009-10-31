@@ -30,7 +30,7 @@ def merge_playlist(widget):
     client.load(browser_vars.playlist_list[1][selection])
 
 def delete_playlist(widget):
-  browserwindow_wTree.get_widget('ask_yes_no').show() 
+  browserwindow_wTree.get_widget('ask_yes_no').show_all() 
   
 def ok_clicked(widget):
   selections=browserwindow_wTree.get_widget('browser_list').get_selection().get_selected_rows()[1][0]
@@ -39,11 +39,11 @@ def ok_clicked(widget):
   browser_vars.playlist_list[1]=[]
   browser_vars.playlist_list[0]=None
   change_playlist()
-  browserwindow_wTree.get_widget('ask_yes_no').hide()
+  browserwindow_wTree.get_widget('ask_yes_no').hide_all()
   return True
   
 def cancel_button(widget):
-  browserwindow_wTree.get_widget('ask_yes_no').hide()
+  browserwindow_wTree.get_widget('ask_yes_no').hide_all()
   return True
       
 #current playlist code
@@ -78,19 +78,19 @@ def current_delete(widget):
     client.delete(selection)
 
 def create_playlist_show(widget):
-  browserwindow_wTree.get_widget('ask_user_input').show()
+  browserwindow_wTree.get_widget('ask_user_input').show_all()
 
 def create_playlist_ok(widget):
   playlist_name=browserwindow_wTree.get_widget('user_input_entry').get_text()
   client.save(playlist_name)
-  browserwindow_wTree.get_widget('ask_user_input').hide()
+  browserwindow_wTree.get_widget('ask_user_input').hide_all()
   browserwindow_wTree.get_widget('user_input_entry').set_text('')
   browser_vars.playlist_list[1].append(playlist_name)
   return True
   
 def create_playlist_cancel(widget):
   browserwindow_wTree.get_widget('user_input_entry').set_text('')
-  browserwindow_wTree.get_widget('ask_user_input').hide()
+  browserwindow_wTree.get_widget('ask_user_input').hide_all()
   return True
 
 def current_clear(widget):

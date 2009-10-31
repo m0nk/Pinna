@@ -2,6 +2,7 @@ import urllib2
 import os
 import gtk
 import Image
+from xml.dom import minidom
 
 from connection import client
 from ui import mainwindow_wTree
@@ -106,30 +107,40 @@ def save_artistbio(bio,show):
     infowindow_wTree.get_widget('info_textview').get_buffer().set_text(bio)
  
 def scrape_lyricwiki():
-  artist=infowindow_wTree.get_widget('artist_entry').get_text().replace(' ','_')
-  title=infowindow_wTree.get_widget('title_entry').get_text().replace(' ','_')
   try:
-    song=artist+':'+title
-    url='http://lyrics.wikia.com/lyrics/'+song
+    artist=infowindow_wTree.get_widget('artist_entry').get_text().replace(' ','+')
+    title=infowindow_wTree.get_widget('title_entry').get_text().replace(' ','+')
+    query=artist+':'+title
+    url='http://lyrics.wikia.com/Special:Search?search='+query+'&go=1'
     u=urllib2.urlopen(url)
     data=u.read()
     u.close()
-    if data.find("<div class='lyricbox' >")>-1:
-      data=data[data.find("<div class='lyricbox' >")+23:len(data)]
-      data=data[0:data.find('<!-- ')]
+
+    def get_lyrics(data):
+      data=data[data.find("<div class='lyricbox'>"):] 
+      data=data[:data.find('<!--')-1]
+      data=data[data.find('</div')+6:]
+      data=data.replace('<br />','&#10;')
+      lyrics=''
+      for digit in data.split(';'):
+        lyrics+=unichr(int(digit[2:len(digit)]))
+      return lyrics
+
+    if data.find("<div class='lyricbox'>")==-1:
+      data=data[data.find("<hr/><ul class='mw-search-results'>"):]
+      data=data[data.find('"')+1:]
+      data=data[:data.find('"')]
+      data=data.replace(' ','_')
+      print data
+      u=urllib2.urlopen(data)
+      save_lyrics(get_lyrics(u.read()))
+      u.close()
+
     else:
-      data=data[data.find("<div class='lyricbox'>"):]
-      data=data[data.find("</div>")+6:]
-      data= data[:data.find('<!--')]
-    data=data.replace('<br />','&#10;')
-    lyrics=''
-    data=data.split(';')
-    data.pop(len(data)-1)
-    for charcter in data:
-      lyrics+=chr(int(charcter[2:len(charcter)]))
-    save_lyrics(lyrics)
+      save_lyrics(get_lyrics(data))
+  
   except:
-    save_lyrics('')
+    save_lyrics('')  
 
 def scrape_lyricsplugin():
   artist=infowindow_wTree.get_widget('artist_entry').get_text().replace(' ','%20')
@@ -173,15 +184,29 @@ def save_albumart(artwork):
   infowindow_wTree.get_widget('info_textview').get_buffer().delete(infowindow_wTree.get_widget('info_textview').get_buffer().get_iter_at_line_offset(0,0),infowindow_wTree.get_widget('info_textview').get_buffer().get_iter_at_line_offset(0,1))
   set_albumart()
   
-def scrape_albumart():
-  song=client.currentsong()
-  file_name=song['artist']+':'+song['album']+'.jpg'
-  file_name=file_name.replace(' ','+')
-  file_name=file_name.lower()
-  if 'artist' in song.keys() and 'album' in song.keys():
-    song = infowindow_wTree.get_widget('artist_entry').get_text()+'+'+infowindow_wTree.get_widget('album_entry').get_text()
+def scrape_rhapsody(artist,album):
+  artist=artist.replace(' ','-')
+  album=album.replace(' ','-')
+  url='http://rhapsody.com/'+artist+'/'+album+'/data.xml'
+  cnodes=minidom.parse(urllib2.urlopen(url)).childNodes
+  if len(cnodes)>1:
+    cnodes=cnodes[1]
+    art_work=cnodes.getElementsByTagName('album-art')
+    for art in art_work:
+      if art.getAttribute('size')=='large':
+        url=art.getElementsByTagName('img')[0].getAttribute('src')
+    if url[len(url)-4:len(url)]=='.jpg':
+      u=urllib2.urlopen(url)
+      save_albumart(u.read())
+      u.close()
+    return True
+  else:
+    return False
+
+def scrape_amazon(artist,album):
+    song=artist+'+'+album
     song=song.replace(' ','+')
-    url='http://www.amazon.com/s/ref=nb_ss_gw?url=search-alias%3Dpopular&field-keywords='+song+'&x=0&y=0'
+    url="http://www.amazon.com/s/ref=nb_ss_gw?url=search-alias%3Dpopular&field-keywords="+song+"&x=0&y=0"
     temp=urllib2.urlopen(url.encode('latin1'))
     data=temp.read()
     temp.close()
@@ -194,13 +219,29 @@ def scrape_albumart():
     else:
       temp+=10
     data=data[temp:data.find('.jpg"')+4]
-    data=data.replace('_SL160_AA115_.jpg','_SL500_AA240_.jpg')
-    print data
+    data=data.replace('_SL160_AA115_.jpg','_SL500_AA170_.jpg')
     u=urllib2.urlopen(data)
     picture=u.read()
     u.close()
     save_albumart(picture)
-    
+
+def scrape_albumart():
+  song=client.currentsong()
+  if 'artist' in song.keys() and 'album' in song.keys():
+    artist=infowindow_wTree.get_widget('artist_entry').get_text()
+    album=infowindow_wTree.get_widget('album_entry').get_text()
+    try:
+      if not scrape_rhapsody(artist,album):
+        try:
+          scrape_amazon(artist,album)
+        except:
+          pass      
+    except:
+      try:
+        scrape_amazon(artist,album)
+      except:
+        pass
+
 def search(widget):
   if infowindow_wTree.get_widget('search_for').get_active()==0:
     try:
@@ -286,8 +327,8 @@ def filechooser_ok(widget):
   song=song['artist']+':'+song['album']+'.jpg'
   song=song.lower().replace(' ','+')
   song=song.replace('/','+')
-  width=240
-  height=240
+  width=170
+  height=170
   image_file=Image.open(infowindow_wTree.get_widget('filechooser').get_filename())
   infowindow_wTree.get_widget('info_textview').get_buffer().delete(infowindow_wTree.get_widget('info_textview').get_buffer().get_iter_at_line_offset(0,0),infowindow_wTree.get_widget('info_textview').get_buffer().get_iter_at_line_offset(0,1))
 
