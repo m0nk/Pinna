@@ -10,6 +10,33 @@ from ui import infowindow_wTree
 from ui import default_albumart
 from variables import info_vars
 from variables import settings 
+from ui import notifier
+
+
+def display_popup():
+  current_song=client.currentsong()
+  popup=[]
+
+          
+  if 'title' in current_song.keys():
+    if len(current_song['title'])<=25:
+      popup.append(current_song['title'])
+    else:
+      popup.append(current_song['title'][0:25])
+  else:
+    insert=current_song['file'].split('/')
+    insert=insert[len(insert)-1]
+    if len(insert)<=25:
+      popup.append(insert)
+    else:
+      popup.append(insert[0:25])
+  if 'artist' in current_song.keys():
+    popup.append('by '+current_song['artist'])
+    if 'album' in current_song.keys():
+      popup[1]+=' on '+current_song['album']
+  notifier.update(popup[0],popup[1])
+  notifier.show()
+
 
 def change_info():
   song=client.currentsong()
@@ -23,7 +50,8 @@ def change_info():
   else:
     infowindow_wTree.get_widget('album_entry').set_sensitive(False)
     infowindow_wTree.get_widget('from_file').set_sensitive(False)
-  
+  display_popup()  
+
 def set_albumart(main=True):
   song=client.currentsong()
   pixbuf=default_albumart
@@ -37,6 +65,8 @@ def set_albumart(main=True):
   if main==True:
     mainwindow_wTree.get_widget('main_window_album_art').set_from_pixbuf(pixbuf.scale_simple(80,80,gtk.gdk.INTERP_BILINEAR))
   infowindow_wTree.get_widget('info_textview').get_buffer().insert_pixbuf(infowindow_wTree.get_widget('info_textview').get_buffer().get_iter_at_line_offset(0,0),pixbuf)
+  notifier.set_icon_from_pixbuf(pixbuf.scale_simple(40,40,gtk.gdk.INTERP_BILINEAR))
+
   
 def change_lyrics(widget):
   info_vars.view='lyrics'
@@ -196,6 +226,7 @@ def scrape_rhapsody(artist,album):
       if art.getAttribute('size')=='large':
         url=art.getElementsByTagName('img')[0].getAttribute('src')
     if url[len(url)-4:len(url)]=='.jpg':
+      print url
       u=urllib2.urlopen(url)
       save_albumart(u.read())
       u.close()
@@ -204,26 +235,21 @@ def scrape_rhapsody(artist,album):
     return False
 
 def scrape_amazon(artist,album):
-    song=artist+'+'+album
-    song=song.replace(' ','+')
-    url="http://www.amazon.com/s/ref=nb_ss_gw?url=search-alias%3Dpopular&field-keywords="+song+"&x=0&y=0"
-    temp=urllib2.urlopen(url.encode('latin1'))
-    data=temp.read()
-    temp.close()
-    start=data.find('<td class="imageColumn" width="123"><table border="0" cellpadding="0" cellspacing="0">')
-    end=data.find('<td class="dataColumn"><table cellpadding="0" cellspacing="0" border="0"><tr><td>')
-    data=data[start:end]
-    temp=data.find('<img src="')
-    if temp < 0:
-      temp=data.find(' src=')+6
-    else:
-      temp+=10
-    data=data[temp:data.find('.jpg"')+4]
-    data=data.replace('_SL160_AA115_.jpg','_SL500_AA170_.jpg')
-    u=urllib2.urlopen(data)
-    picture=u.read()
+  artist=artist.replace(' ','+')
+  album=album.replace(' ','+')
+  url="http://musicbrainz.org/ws/1/release/?type=xml&artist='"+artist+"'&title='"+album+"'"
+  print url
+  xmldoc=minidom.parse(urllib2.urlopen(url))
+  cnodes=xmldoc.childNodes[0]
+  print cnodes
+  amazon_id=cnodes.getElementsByTagName('asin')[0].firstChild.data
+  amazon_url='http://ec1.images-amazon.com/images/P/'+amazon_id+'.01.SS170.jpg'
+  print len(amazon_id)
+  if str(amazon_id[0])!=' ':
+    print amazon_url
+    u=urllib2.urlopen(amazon_url)
+    save_albumart(u.read())
     u.close()
-    save_albumart(picture)
 
 def scrape_albumart():
   song=client.currentsong()

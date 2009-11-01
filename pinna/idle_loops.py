@@ -23,6 +23,7 @@ def song_change():
     insert=current_song['file'].split('/')
     insert=insert[len(insert)-1]
   insert=insert.replace('&','&amp;')
+
   mainwindow_wTree.get_widget('current_song_label').set_property("label","<span font_size='12344'>"+insert+"</span>")
   infowindow_wTree.get_widget('artist_entry').set_text(artist)
   infowindow_wTree.get_widget('title_entry').set_text(title)
@@ -112,7 +113,7 @@ def check_alarm():
       client.play()
     
 def idle_loop():
-  try:
+  #try:
     status=client.status()    
     stats=client.stats()
     if status['playlist'] != browser_vars.playlist_version:
@@ -148,19 +149,20 @@ def idle_loop():
     ###set things that are bound to change often :)
     mainwindow_wTree.get_widget('volume_scale').set_value(int(status['volume']))
     handle_toggles(status)
-  except: 
-    checks.song=None
-    mainwindow_wTree.get_widget('progressbar').set_text('not connected')
-    mainwindow_wTree.get_widget('progressbar').set_fraction(0.0)
-    mainwindow_wTree.get_widget('current_song_label').set_property('label','')
-    try:
-      client.disconnect()
-    except:
-      pass
-    try:
-      client.connect(settings.mpd_host,int(settings.mpd_port))
-      client.password(settings.mpd_pass)
-    except:
-      pass
-  return True  
+    return True
+  #except: 
+  #  checks.song=None
+  #  mainwindow_wTree.get_widget('progressbar').set_text('not connected')
+  #  mainwindow_wTree.get_widget('progressbar').set_fraction(0.0)
+  #  mainwindow_wTree.get_widget('current_song_label').set_property('label','')
+  #  try:
+  #    client.disconnect()
+  #  except:
+  #    pass
+  #  try:
+  #    client.connect(settings.mpd_host,int(settings.mpd_port))
+  #    client.password(settings.mpd_pass)
+  #  except:
+  #    pass
+  #return True  
 gobject.timeout_add(250,idle_loop)  
