@@ -15,9 +15,7 @@ from ui import notifier
 
 def display_popup():
   current_song=client.currentsong()
-  popup=[]
-
-          
+  popup=[]          
   if 'title' in current_song.keys():
     if len(current_song['title'])<=25:
       popup.append(current_song['title'])
@@ -135,7 +133,34 @@ def save_artistbio(bio,show):
   if show==True:
     info_vars.view='bio'
     infowindow_wTree.get_widget('info_textview').get_buffer().set_text(bio)
- 
+
+def scrape_leoslyrics():
+  print 'leoslyrics'
+  artist=infowindow_wTree.get_widget('artist_entry').get_text().replace(' ','%20')
+  title=infowindow_wTree.get_widget('title_entry').get_text().replace(' ','%20')
+  print 'http://api.leoslyrics.com/api_search.php?auth=pinna&artist="'+artist+'"&songtitle="'+title+'"'
+  cnode=minidom.parse(urllib2.urlopen('http://api.leoslyrics.com/api_search.php?auth=pinna&artist="'+artist+'"&songtitle="'+title+'"')).getElementsByTagName('result')[0]
+  print cnode.getAttribute('exactMatch')
+  if cnode.getAttribute('exactMatch')=='true':
+    lyric_id=cnode.getAttribute('id')
+    print lyric_id
+    save_lyrics(minidom.parse(urllib2.urlopen('http://api.leoslyrics.com/api_lyrics.php?auth=pinna&id='+lyric_id)).getElementsByTagName('text')[0].firstChild.data)
+  else:
+    save_lyrics('')
+
+def scrape_lyrdb():
+  print 'doinb it'
+  artist=infowindow_wTree.get_widget('artist_entry').get_text().replace(' ','%20')
+  title=infowindow_wTree.get_widget('title_entry').get_text().replace(' ','%20')
+  url='http://webservices.lyrdb.com/lookup.php?q='+artist+'|'+title+'&for=match&agent=pinna'
+  u=urllib2.urlopen(url)
+  u=urllib2.urlopen('http://webservices.lyrdb.com/getlyr.php?q='+u.read().split('\n')[0].split('\\')[0])
+  data=u.read()
+  if data.split('\n')[0][0:5]!='error':
+    save_lyrics(format_text(data))
+  else:
+    save_lyrics('')
+
 def scrape_lyricwiki():
   try:
     artist=infowindow_wTree.get_widget('artist_entry').get_text().replace(' ','+')
@@ -177,6 +202,7 @@ def scrape_lyricsplugin():
   title=infowindow_wTree.get_widget('title_entry').get_text().replace(' ','%20')
   
   url='http://lyricsplugin.com/wmplayer03/plugin/?artist='+artist+'&title='+title
+  print url
   u=urllib2.urlopen(url)
   lyrics=u.read()
   lyrics=lyrics[lyrics.find('<div id="lyrics">')+18:len(lyrics)]
@@ -282,6 +308,10 @@ def search(widget):
       scrape_lyricwiki()
     if infowindow_wTree.get_widget('lyricsite').get_active()==0:
       scrape_lyricsplugin()
+    if infowindow_wTree.get_widget('lyricsite').get_active()==3:
+      scrape_leoslyrics()
+    if infowindow_wTree.get_widget('lyricsite').get_active()==2:
+      scrape_lyrdb()
   if infowindow_wTree.get_widget('search_for').get_active()==1:
     scrape_albumart()
   if infowindow_wTree.get_widget('search_for').get_active()==2:
@@ -289,6 +319,10 @@ def search(widget):
       scrape_lyricwiki()
     if infowindow_wTree.get_widget('lyricsite').get_active()==0:
       scrape_lyricsplugin()
+    if infowindow_wTree.get_widget('lyricsite').get_active()==2:
+      scrape_lyrdb()
+    if infowindow_wTree.get_widget('lyricsite').get_active()==3:
+      scrape_leoslyrics()
   if infowindow_wTree.get_widget('search_for').get_active()==3:
     scrape_artistbio(True)
 

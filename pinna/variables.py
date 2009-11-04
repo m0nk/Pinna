@@ -25,6 +25,7 @@ class info_vars:
   
 class browser_vars:
   view=None
+  added_songs=[]
   browser_list=[None,[]]
   playlist_list=[None,[]]
   current_playlist=[None,[]]

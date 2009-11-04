@@ -1,17 +1,17 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.2 on Tue Oct 27 16:57:21 2009 -->
+<?xml version="1.0"?>
 <glade-interface>
+  <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkMenu" id="file_menu">
     <property name="visible">True</property>
     <child>
       <widget class="GtkImageMenuItem" id="Open">
+        <property name="label">Open</property>
         <property name="visible">True</property>
-        <property name="label" translatable="yes">Open</property>
-        <property name="use_underline">True</property>
+        <property name="use_stock">False</property>
         <signal name="activate" handler="open_clicked"/>
         <child internal-child="image">
-          <widget class="GtkImage" id="menu-item-image1">
+          <widget class="GtkImage" id="image1">
             <property name="visible">True</property>
             <property name="stock">gtk-open</property>
           </widget>
@@ -20,30 +20,20 @@
     </child>
     <child>
       <widget class="GtkImageMenuItem" id="add">
+        <property name="label">gtk-add</property>
         <property name="visible">True</property>
-        <property name="label" translatable="yes">add</property>
         <property name="use_underline">True</property>
+        <property name="use_stock">True</property>
         <signal name="activate" handler="add_clicked"/>
-        <child internal-child="image">
-          <widget class="GtkImage" id="menu-item-image2">
-            <property name="visible">True</property>
-            <property name="stock">gtk-add</property>
-          </widget>
-        </child>
       </widget>
     </child>
     <child>
       <widget class="GtkImageMenuItem" id="Update_DB">
+        <property name="label">gtk-refresh</property>
         <property name="visible">True</property>
-        <property name="label" translatable="yes">Update DB</property>
         <property name="use_underline">True</property>
+        <property name="use_stock">True</property>
         <signal name="activate" handler="update_DB_clicked"/>
-        <child internal-child="image">
-          <widget class="GtkImage" id="menu-item-image3">
-            <property name="visible">True</property>
-            <property name="stock">gtk-refresh</property>
-          </widget>
-        </child>
       </widget>
     </child>
   </widget>
@@ -51,58 +41,38 @@
     <property name="visible">True</property>
     <child>
       <widget class="GtkImageMenuItem" id="play">
+        <property name="label">gtk-media-play</property>
         <property name="visible">True</property>
-        <property name="label" translatable="yes">play</property>
         <property name="use_underline">True</property>
+        <property name="use_stock">True</property>
         <signal name="activate" handler="play_clicked"/>
-        <child internal-child="image">
-          <widget class="GtkImage" id="menu-item-image4">
-            <property name="visible">True</property>
-            <property name="stock">gtk-media-play</property>
-          </widget>
-        </child>
       </widget>
     </child>
     <child>
       <widget class="GtkImageMenuItem" id="create_playlist">
+        <property name="label">gtk-save</property>
         <property name="visible">True</property>
-        <property name="label" translatable="yes">create playlist</property>
         <property name="use_underline">True</property>
+        <property name="use_stock">True</property>
         <signal name="activate" handler="create_playlist_clicked"/>
-        <child internal-child="image">
-          <widget class="GtkImage" id="menu-item-image5">
-            <property name="visible">True</property>
-            <property name="stock">gtk-save</property>
-          </widget>
-        </child>
       </widget>
     </child>
     <child>
-      <widget class="GtkImageMenuItem" id="delete">
+      <widget class="GtkImageMenuItem" id="remove">
+        <property name="label">gtk-remove</property>
         <property name="visible">True</property>
-        <property name="label" translatable="yes">delete</property>
         <property name="use_underline">True</property>
+        <property name="use_stock">True</property>
         <signal name="activate" handler="delete_clicked"/>
-        <child internal-child="image">
-          <widget class="GtkImage" id="menu-item-image7">
-            <property name="visible">True</property>
-            <property name="stock">gtk-delete</property>
-          </widget>
-        </child>
       </widget>
     </child>
     <child>
       <widget class="GtkImageMenuItem" id="clear">
+        <property name="label">gtk-clear</property>
         <property name="visible">True</property>
-        <property name="label" translatable="yes">clear</property>
         <property name="use_underline">True</property>
+        <property name="use_stock">True</property>
         <signal name="activate" handler="clear_clicked"/>
-        <child internal-child="image">
-          <widget class="GtkImage" id="menu-item-image6">
-            <property name="visible">True</property>
-            <property name="stock">gtk-clear</property>
-          </widget>
-        </child>
       </widget>
     </child>
   </widget>
@@ -110,153 +80,29 @@
     <property name="visible">True</property>
     <child>
       <widget class="GtkImageMenuItem" id="add_playlist">
+        <property name="label">gtk-media-play</property>
         <property name="visible">True</property>
-        <property name="label" translatable="yes">Play</property>
         <property name="use_underline">True</property>
+        <property name="use_stock">True</property>
         <signal name="activate" handler="add_playlist_clicked"/>
-        <child internal-child="image">
-          <widget class="GtkImage" id="menu-item-image8">
-            <property name="visible">True</property>
-            <property name="stock">gtk-media-play</property>
-          </widget>
-        </child>
       </widget>
     </child>
     <child>
       <widget class="GtkImageMenuItem" id="merge_playlist">
+        <property name="label">gtk-add</property>
         <property name="visible">True</property>
-        <property name="label" translatable="yes">Merge</property>
         <property name="use_underline">True</property>
+        <property name="use_stock">True</property>
         <signal name="activate" handler="merge_playlist_clicked"/>
-        <child internal-child="image">
-          <widget class="GtkImage" id="menu-item-image9">
-            <property name="visible">True</property>
-            <property name="stock">gtk-add</property>
-          </widget>
-        </child>
       </widget>
     </child>
     <child>
       <widget class="GtkImageMenuItem" id="delete_playlist">
+        <property name="label">gtk-delete</property>
         <property name="visible">True</property>
-        <property name="label" translatable="yes">Delete</property>
         <property name="use_underline">True</property>
+        <property name="use_stock">True</property>
         <signal name="activate" handler="delete_playlist_clicked"/>
-        <child internal-child="image">
-          <widget class="GtkImage" id="menu-item-image10">
-            <property name="visible">True</property>
-            <property name="stock">gtk-delete</property>
-          </widget>
-        </child>
-      </widget>
-    </child>
-  </widget>
-  <widget class="GtkWindow" id="ask_user_input">
-    <property name="width_request">328</property>
-    <property name="height_request">95</property>
-    <property name="title" translatable="yes">Playlist name?</property>
-    <property name="resizable">False</property>
-    <property name="window_position">GTK_WIN_POS_MOUSE</property>
-    <property name="skip_taskbar_hint">True</property>
-    <property name="urgency_hint">True</property>
-    <property name="deletable">False</property>
-    <signal name="delete_event" handler="user_input_destroy"/>
-    <child>
-      <widget class="GtkLayout" id="layout2">
-        <property name="visible">True</property>
-        <property name="width">362</property>
-        <property name="height">95</property>
-        <child>
-          <widget class="GtkEntry" id="user_input_entry">
-            <property name="width_request">319</property>
-            <property name="height_request">29</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="shadow_type">GTK_SHADOW_NONE</property>
-          </widget>
-          <packing>
-            <property name="x">5</property>
-            <property name="y">5</property>
-          </packing>
-        </child>
-        <child>
-          <widget class="GtkButton" id="user_input_ok">
-            <property name="width_request">79</property>
-            <property name="height_request">41</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="label" translatable="yes">ok</property>
-            <property name="response_id">0</property>
-            <signal name="clicked" handler="user_input_ok_clicked_cb"/>
-          </widget>
-          <packing>
-            <property name="x">228</property>
-            <property name="y">50</property>
-          </packing>
-        </child>
-        <child>
-          <widget class="GtkButton" id="user_input_cancel">
-            <property name="width_request">79</property>
-            <property name="height_request">41</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="label" translatable="yes">cancel</property>
-            <property name="response_id">0</property>
-            <signal name="clicked" handler="user_input_cancel_clicked_cb"/>
-          </widget>
-          <packing>
-            <property name="x">126</property>
-            <property name="y">50</property>
-          </packing>
-        </child>
-      </widget>
-    </child>
-  </widget>
-  <widget class="GtkWindow" id="ask_yes_no">
-    <property name="width_request">201</property>
-    <property name="height_request">42</property>
-    <property name="title" translatable="yes">are you sure?</property>
-    <property name="window_position">GTK_WIN_POS_MOUSE</property>
-    <property name="skip_taskbar_hint">True</property>
-    <property name="urgency_hint">True</property>
-    <signal name="delete_event" handler="yes_no_destroy"/>
-    <child>
-      <widget class="GtkLayout" id="layout3">
-        <property name="visible">True</property>
-        <child>
-          <widget class="GtkButton" id="ok_button">
-            <property name="width_request">74</property>
-            <property name="height_request">34</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="label" translatable="yes">Yes</property>
-            <property name="response_id">0</property>
-            <signal name="clicked" handler="on_ok_button_clicked"/>
-          </widget>
-          <packing>
-            <property name="x">86</property>
-            <property name="y">3</property>
-          </packing>
-        </child>
-        <child>
-          <widget class="GtkButton" id="cancel_button">
-            <property name="width_request">74</property>
-            <property name="height_request">34</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="label" translatable="yes">No</property>
-            <property name="response_id">0</property>
-            <signal name="clicked" handler="on_cancel_button_clicked"/>
-          </widget>
-          <packing>
-            <property name="x">3</property>
-            <property name="y">3</property>
-          </packing>
-        </child>
       </widget>
     </child>
   </widget>
@@ -264,18 +110,17 @@
     <property name="width_request">601</property>
     <property name="height_request">460</property>
     <property name="title" translatable="yes">Pinna - Current Playlist</property>
-    <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
+    <property name="window_position">center-on-parent</property>
     <signal name="delete_event" handler="browser_window_destroy"/>
     <child>
       <widget class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
-        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
-        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+        <property name="orientation">vertical</property>
         <child>
           <widget class="GtkScrolledWindow" id="browser_scroll">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="hscrollbar_policy">GTK_POLICY_NEVER</property>
+            <property name="hscrollbar_policy">never</property>
             <child>
               <widget class="GtkTreeView" id="browser_list">
                 <property name="visible">True</property>
@@ -288,6 +133,9 @@
               </widget>
             </child>
           </widget>
+          <packing>
+            <property name="position">0</property>
+          </packing>
         </child>
         <child>
           <widget class="GtkHBox" id="hbox2">
@@ -310,6 +158,7 @@ Playlist</property>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
@@ -319,7 +168,7 @@ Playlist</property>
                 <property name="visible">True</property>
                 <property name="can_default">True</property>
                 <property name="receives_default">True</property>
-                <property name="invisible_char">●</property>
+                <property name="invisible_char">&#x25CF;</property>
               </widget>
               <packing>
                 <property name="position">1</property>
@@ -344,12 +193,13 @@ album</property>
                 </child>
                 <child>
                   <widget class="GtkButton" id="search_button">
+                    <property name="label" translatable="yes">Search</property>
                     <property name="width_request">100</property>
                     <property name="height_request">25</property>
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Search</property>
+                    <property name="can_focus">False</property>
+                    <property name="receives_default">False</property>
                     <property name="focus_on_click">False</property>
-                    <property name="response_id">0</property>
                     <signal name="clicked" handler="on_search_button_clicked"/>
                   </widget>
                   <packing>

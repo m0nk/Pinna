@@ -4,6 +4,7 @@ from variables import checks
 from variables import browser_vars
 import gtk.gdk
 from connection import client
+from ui import browser_popups
 
 #playlist code
 
@@ -30,21 +31,14 @@ def merge_playlist(widget):
     client.load(browser_vars.playlist_list[1][selection])
 
 def delete_playlist(widget):
-  browserwindow_wTree.get_widget('ask_yes_no').show_all() 
-  
-def ok_clicked(widget):
-  selections=browserwindow_wTree.get_widget('browser_list').get_selection().get_selected_rows()[1][0]
-  for selection in selections:
-    client.rm(browser_vars.playlist_list[1][selection])
-  browser_vars.playlist_list[1]=[]
-  browser_vars.playlist_list[0]=None
-  change_playlist()
-  browserwindow_wTree.get_widget('ask_yes_no').hide_all()
-  return True
-  
-def cancel_button(widget):
-  browserwindow_wTree.get_widget('ask_yes_no').hide_all()
-  return True
+  if browser_popups[1].run()==True:
+    selections=browserwindow_wTree.get_widget('browser_list').get_selection().get_selected_rows()[1][0]
+    for selection in selections:
+      client.rm(browser_vars.playlist_list[1][selection])
+    browser_vars.playlist_list[1]=[]
+    browser_vars.playlist_list[0]=None
+    change_playlist()
+
       
 #current playlist code
 
@@ -78,20 +72,9 @@ def current_delete(widget):
     client.delete(selection)
 
 def create_playlist_show(widget):
-  browserwindow_wTree.get_widget('ask_user_input').show_all()
-
-def create_playlist_ok(widget):
-  playlist_name=browserwindow_wTree.get_widget('user_input_entry').get_text()
+  playlist_name=browser_popups[0].run()
   client.save(playlist_name)
-  browserwindow_wTree.get_widget('ask_user_input').hide_all()
-  browserwindow_wTree.get_widget('user_input_entry').set_text('')
   browser_vars.playlist_list[1].append(playlist_name)
-  return True
-  
-def create_playlist_cancel(widget):
-  browserwindow_wTree.get_widget('user_input_entry').set_text('')
-  browserwindow_wTree.get_widget('ask_user_input').hide_all()
-  return True
 
 def current_clear(widget):
   client.clear()
@@ -105,7 +88,10 @@ def change_browser():
     browserwindow_wTree.get_widget('browser_list').set_model(None)
     model.clear()
     for song in browser_vars.browser_list[1]:
-      model.append([song[1]])
+      if song[0]=='file' and song[2] in browser_vars.added_songs:
+        model.append(['<b>'+song[1]+'</b>'])
+      else:
+        model.append([song[1]])
     browserwindow_wTree.get_widget('browser_list').set_model(model)
   else:
     change_directory('')
@@ -149,7 +135,11 @@ def change_directory(new_directory):
     browserwindow_wTree.get_widget('browser_list').set_model(None)
     model.clear()
     for item in browser_vars.browser_list[1]:
-      model.append([item[1]])
+      print 'ass'
+      if item[0]=='file' and  item[2] in browser_vars.added_songs:
+        model.append(['<b>'+item[1]+'</b>'])
+      else:
+        model.append([item[1]])
     browserwindow_wTree.get_widget('browser_list').set_model(model)
 
 def browser_open(widget):
@@ -160,14 +150,28 @@ def browser_open(widget):
 def browser_doubleclick():
   selections=browserwindow_wTree.get_widget('browser_list').get_selection().get_selected_rows()[1][0]
   if browser_vars.browser_list[1][selections[0]][0]=='file':
-    client.add(browser_vars.browser_list[1][selections[0]][2])
+    if browser_vars.browser_list[1][selections[0]][2] not in browser_vars.added_songs:
+      client.add(browser_vars.browser_list[1][selections[0]][2])
+      model=browserwindow_wTree.get_widget('browser_list').get_model()
+      song_id=selections[0]
+      model.remove(model.get_iter(song_id))
+      #song=model.get(song_id)
+      song = browser_vars.browser_list[1][selections[0]][1]
+      model.insert(song_id,['<b>'+song+'</b>'])
+    else:
+      client.play(browser_vars.added_songs.index(browser_vars.browser_list[1][selections[0]][2]))
   if browser_vars.browser_list[1][selections[0]][0]=='directory':
     change_directory(browser_vars.browser_list[1][selections[0]][2])
 
 def browser_add(widget):
+  model=browserwindow_wTree.get_widget('browser_list').get_model()
   selections=browserwindow_wTree.get_widget('browser_list').get_selection().get_selected_rows()[1]
   for selection in selections:
     client.add(browser_vars.browser_list[1][selection[0]][2])
+    if browser_vars.browser_list[1][selection[0]][0]=='file':
+      song=browser_vars.browser_list[1][selection[0]][1]
+      model.remove(model.get_iter(selection[0]))
+      model.insert(selection[0],['<b>'+song+'</b>'])
 
 def update_database(widget):
   client.update()
@@ -191,7 +195,10 @@ def search(widget):
       insert=insert[len(insert)-1]
     browser_vars.browser_list[1].append(('file',insert.replace('&','&amp;'),result['file']))
   for song in browser_vars.browser_list[1]:
-    model.append([song[1]])
+    if song[0]=='file' and song[2] in browser_vars.added_songs:
+      model.append(['<b>'+song[1]+'</b>'])
+    else:
+      model.append([song[1]])
   browserwindow_wTree.get_widget('browser_list').set_model(model)
  
 #bs 
@@ -297,9 +304,7 @@ shared_buttons={'on_browser_mode_changed':change_browse_mode,'browser_window_des
 current_buttons={'play_clicked':current_play,'clear_clicked':current_clear,'delete_clicked':current_delete,'create_playlist_clicked':create_playlist_show}
 file_buttons={'open_clicked':browser_open,'add_clicked':browser_add,'update_DB_clicked':update_database,'on_search_button_clicked':search}
 
-playlist_buttons={'user_input_destroy':create_playlist_cancel,'user_input_cancel_clicked_cb':create_playlist_cancel,'user_input_ok_clicked_cb':create_playlist_ok,
-'add_playlist_clicked':add_playlist,'merge_playlist_clicked':merge_playlist,'delete_playlist_clicked':delete_playlist,'on_ok_button_clicked':ok_clicked,
-'on_cancel_button_clicked':cancel_button}
+playlist_buttons={'add_playlist_clicked':add_playlist,'merge_playlist_clicked':merge_playlist,'delete_playlist_clicked':delete_playlist}
 
 try:
   disable_search()

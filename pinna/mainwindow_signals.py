@@ -63,8 +63,6 @@ def song_scroll(widget,click):
 def mainwindow_quit(widget,event):
   windows=[mainwindow_wTree.get_widget('windowMain'),
   browserwindow_wTree.get_widget('browser_window'),
-  browserwindow_wTree.get_widget('ask_user_input'),
-  browserwindow_wTree.get_widget('ask_yes_no'),
   infowindow_wTree.get_widget('info_window'),
   settingswindow_wTree.get_widget('settings_window'),
   infowindow_wTree.get_widget('search_window')]
