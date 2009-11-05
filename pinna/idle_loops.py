@@ -64,6 +64,7 @@ def handle_toggles(status):
   
 def highlight_current_song():
   status=client.status()
+  filename=client.currentsong()['file']
   if 'song' in status.keys():
     song=int(status['song'])
     if browser_vars.last_song:
@@ -71,10 +72,19 @@ def highlight_current_song():
       if browser_vars.view=='current':
         liter=browserwindow_wTree.get_widget('browser_list').get_model().get_iter(int(browser_vars.last_song[0]))
         browserwindow_wTree.get_widget('browser_list').get_model().set_value(liter,0,browser_vars.last_song[1])
+      if browser_vars.view=='file':
+        if browser_vars.last_song[2] in browser_vars.browser_list[2]:
+          index=browser_vars.browser_list[2].index(browser_vars.last_song[2])
+          liter=browserwindow_wTree.get_widget('browser_list').get_model().get_iter(index)
+          browserwindow_wTree.get_widget('browser_list').get_model().set_value(liter,0,'<b>'+browser_vars.browser_list[1][index][1]+'</b>')
     if browser_vars.view=='current':
       liter=browserwindow_wTree.get_widget('browser_list').get_model().get_iter(song)
       browserwindow_wTree.get_widget('browser_list').get_model().set_value(liter,0,'<b>'+browser_vars.current_playlist[1][song]+'</b>')
-    browser_vars.last_song=(song,browser_vars.current_playlist[1][song])
+    if browser_vars.view=='file' and filename in browser_vars.browser_list[2]:
+      index=browser_vars.browser_list[2].index(filename)
+      liter=browserwindow_wTree.get_widget('browser_list').get_model().get_iter(index)
+      browserwindow_wTree.get_widget('browser_list').get_model().set_value(liter,0,'<i><b>'+browser_vars.current_playlist[1][song]+'</b></i>')
+    browser_vars.last_song=(song,browser_vars.current_playlist[1][song],filename)
     browser_vars.current_playlist[1][song]='<b>'+browser_vars.current_playlist[1][song]+'</b>'
     
 def update_current_playlist():
@@ -103,13 +113,23 @@ def update_current_playlist():
       browser_vars.last_song=None
     elif browser_vars.current_playlist[1][int(browser_vars.last_song[0])]!=browser_vars.last_song[1]:
       browser_vars.last_song=None
-  print browser_vars.added_songs
+  if browser_vars.view=='file':
+    model=browserwindow_wTree.get_widget('browser_list').get_model() 
+    for song in browser_vars.browser_list[1]:
+      filename=song[2]
+      song_id=browser_vars.browser_list[2].index(filename)
+      liter=model.get_iter(song_id)
+      if filename in browser_vars.added_songs:
+        if not model.get(liter,0)[0][:3]=='<b>' or not model.get(liter,0)[0][:3]=='<i>':
+          model.set_value(liter,0,'<b>'+song[1]+'</b>')
+      else:
+        if model.get(liter,0)[0][:3]=='<b>' or model.get(liter,0)[0][:3]=='<i>':
+          model.set_value(liter,0,song[1])
 
 def check_alarm():
   real_time=time.localtime()[3:6]
   alarm_time=(settings.alarm_hour,settings.alarm_minute)
   if real_time[2]==0 and settings.alarm_enable=='1':
-    print 'dicks'
     if real_time[0]==int(alarm_time[0]) and real_time[1]==int(alarm_time[1]):
       client.setvol(int(settings.alarm_volume))
       client.clear()
@@ -153,6 +173,7 @@ def idle_loop():
     ###set things that are bound to change often :)
     mainwindow_wTree.get_widget('volume_scale').set_value(int(status['volume']))
     handle_toggles(status)
+    return True
   except: 
     checks.song=None
     mainwindow_wTree.get_widget('progressbar').set_text('not connected')

@@ -9,7 +9,6 @@ else:
   root_path=""
 
 def init_notifier():
-  print 'notifier is made'
   pynotify.init('pinna song notification')
   notifier=pynotify.Notification('testtickles')
   notifier.set_urgency(pynotify.URGENCY_LOW)

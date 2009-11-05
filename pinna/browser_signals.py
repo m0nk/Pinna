@@ -79,17 +79,21 @@ def create_playlist_show(widget):
 def current_clear(widget):
   client.clear()
   browser_vars.current_playlist[0]=None
-   
+  
 #file browser code
 
-def change_browser():  
+def change_browser():
+  playing_song=client.currentsong()
   if browser_vars.browser_list[1]:
     model=browserwindow_wTree.get_widget('browser_list').get_model()
     browserwindow_wTree.get_widget('browser_list').set_model(None)
     model.clear()
     for song in browser_vars.browser_list[1]:
       if song[0]=='file' and song[2] in browser_vars.added_songs:
-        model.append(['<b>'+song[1]+'</b>'])
+        if 'file' in playing_song.keys() and song[2]==playing_song['file']:
+          model.append(['<i><b>'+song[1]+'</b></i>'])
+        else:
+          model.append(['<b>'+song[1]+'</b>'])
       else:
         model.append([song[1]])
     browserwindow_wTree.get_widget('browser_list').set_model(model)
@@ -107,22 +111,27 @@ def change_browser():
 def change_directory(new_directory):
   browser_vars.browser_list[1]=[]
   browser_vars.browser_list[0]=None
+  browser_vars.browser_list[2]=[]
   chunks=client.lsinfo(new_directory)
+  playing_song=client.currentsong()
   if new_directory:
     up_directory=''
     temp=new_directory.split('/')
     up_directory+='/'.join(temp[0:len(temp)-1])
     browser_vars.browser_list[1].append(('directory','[..]',up_directory))
+    browser_vars.browser_list[2].append(up_directory)
   for item in chunks:
     if 'directory' in item.keys():
       file_type='directory'
       file_name=item['directory']
+      browser_vars.browser_list[2].append(file_name)
       display=file_name.split('/')
       display=display[len(display)-1].replace('&','&amp;')
       browser_vars.browser_list[1].append((file_type,display,file_name))
     if 'file' in item.keys():
       file_type='file'
       file_name=item['file']
+      browser_vars.browser_list[2].append(file_name)
       if 'artist' in item.keys() and 'title' in item.keys():
         display=item['artist']+' - '+item['title']
       else:
@@ -135,9 +144,11 @@ def change_directory(new_directory):
     browserwindow_wTree.get_widget('browser_list').set_model(None)
     model.clear()
     for item in browser_vars.browser_list[1]:
-      print 'ass'
       if item[0]=='file' and  item[2] in browser_vars.added_songs:
-        model.append(['<b>'+item[1]+'</b>'])
+        if 'file' in playing_song.keys() and item[2]==playing_song['file']:
+          model.append(['<i><b>'+item[1]+'</b></i>'])
+        else:
+          model.append(['<b>'+item[1]+'</b>'])
       else:
         model.append([item[1]])
     browserwindow_wTree.get_widget('browser_list').set_model(model)
@@ -152,12 +163,6 @@ def browser_doubleclick():
   if browser_vars.browser_list[1][selections[0]][0]=='file':
     if browser_vars.browser_list[1][selections[0]][2] not in browser_vars.added_songs:
       client.add(browser_vars.browser_list[1][selections[0]][2])
-      model=browserwindow_wTree.get_widget('browser_list').get_model()
-      song_id=selections[0]
-      model.remove(model.get_iter(song_id))
-      #song=model.get(song_id)
-      song = browser_vars.browser_list[1][selections[0]][1]
-      model.insert(song_id,['<b>'+song+'</b>'])
     else:
       client.play(browser_vars.added_songs.index(browser_vars.browser_list[1][selections[0]][2]))
   if browser_vars.browser_list[1][selections[0]][0]=='directory':
@@ -168,15 +173,12 @@ def browser_add(widget):
   selections=browserwindow_wTree.get_widget('browser_list').get_selection().get_selected_rows()[1]
   for selection in selections:
     client.add(browser_vars.browser_list[1][selection[0]][2])
-    if browser_vars.browser_list[1][selection[0]][0]=='file':
-      song=browser_vars.browser_list[1][selection[0]][1]
-      model.remove(model.get_iter(selection[0]))
-      model.insert(selection[0],['<b>'+song+'</b>'])
 
 def update_database(widget):
   client.update()
 
 def search(widget):
+ playing_song=client.currentsong()['file']
  if browserwindow_wTree.get_widget('browser_mode').get_active()==1:
   query = browserwindow_wTree.get_widget('search_query').get_text()
   term = browserwindow_wTree.get_widget('search_item').get_active_text()
@@ -185,7 +187,9 @@ def search(widget):
   model.clear()
   browser_vars.browser_list[0]=None
   browser_vars.browser_list[1]=[]
+  browser_vars.browser_list[2]=[]
   browser_vars.browser_list[1].append(('directory','[ END SEARCH ]',''))
+  browser_vars.browser_list[2].append('')
   results = client.search(term,query)
   for result in results:
     if 'artist' in result.keys() and 'title' in result.keys():
@@ -194,9 +198,13 @@ def search(widget):
       insert=result['file'].split('/')
       insert=insert[len(insert)-1]
     browser_vars.browser_list[1].append(('file',insert.replace('&','&amp;'),result['file']))
+    browser_vars.browser_list[2].append(result['file'])
   for song in browser_vars.browser_list[1]:
     if song[0]=='file' and song[2] in browser_vars.added_songs:
-      model.append(['<b>'+song[1]+'</b>'])
+      if song[0]=='file' and song[2] == playing_song:
+        model.append(['<i><b>'+song[1]+'</b></i>'])
+      else:
+        model.append(['<b>'+song[1]+'</b>'])
     else:
       model.append([song[1]])
   browserwindow_wTree.get_widget('browser_list').set_model(model)

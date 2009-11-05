@@ -135,21 +135,16 @@ def save_artistbio(bio,show):
     infowindow_wTree.get_widget('info_textview').get_buffer().set_text(bio)
 
 def scrape_leoslyrics():
-  print 'leoslyrics'
   artist=infowindow_wTree.get_widget('artist_entry').get_text().replace(' ','%20')
   title=infowindow_wTree.get_widget('title_entry').get_text().replace(' ','%20')
-  print 'http://api.leoslyrics.com/api_search.php?auth=pinna&artist="'+artist+'"&songtitle="'+title+'"'
   cnode=minidom.parse(urllib2.urlopen('http://api.leoslyrics.com/api_search.php?auth=pinna&artist="'+artist+'"&songtitle="'+title+'"')).getElementsByTagName('result')[0]
-  print cnode.getAttribute('exactMatch')
   if cnode.getAttribute('exactMatch')=='true':
     lyric_id=cnode.getAttribute('id')
-    print lyric_id
     save_lyrics(minidom.parse(urllib2.urlopen('http://api.leoslyrics.com/api_lyrics.php?auth=pinna&id='+lyric_id)).getElementsByTagName('text')[0].firstChild.data)
   else:
     save_lyrics('')
 
 def scrape_lyrdb():
-  print 'doinb it'
   artist=infowindow_wTree.get_widget('artist_entry').get_text().replace(' ','%20')
   title=infowindow_wTree.get_widget('title_entry').get_text().replace(' ','%20')
   url='http://webservices.lyrdb.com/lookup.php?q='+artist+'|'+title+'&for=match&agent=pinna'
@@ -186,7 +181,6 @@ def scrape_lyricwiki():
       data=data[data.find('"')+1:]
       data=data[:data.find('"')]
       data=data.replace(' ','_')
-      print data
       u=urllib2.urlopen(data)
       save_lyrics(get_lyrics(u.read()))
       u.close()
@@ -202,7 +196,6 @@ def scrape_lyricsplugin():
   title=infowindow_wTree.get_widget('title_entry').get_text().replace(' ','%20')
   
   url='http://lyricsplugin.com/wmplayer03/plugin/?artist='+artist+'&title='+title
-  print url
   u=urllib2.urlopen(url)
   lyrics=u.read()
   lyrics=lyrics[lyrics.find('<div id="lyrics">')+18:len(lyrics)]
@@ -252,7 +245,6 @@ def scrape_rhapsody(artist,album):
       if art.getAttribute('size')=='large':
         url=art.getElementsByTagName('img')[0].getAttribute('src')
     if url[len(url)-4:len(url)]=='.jpg':
-      print url
       u=urllib2.urlopen(url)
       save_albumart(u.read())
       u.close()
@@ -264,15 +256,11 @@ def scrape_amazon(artist,album):
   artist=artist.replace(' ','+')
   album=album.replace(' ','+')
   url="http://musicbrainz.org/ws/1/release/?type=xml&artist='"+artist+"'&title='"+album+"'"
-  print url
   xmldoc=minidom.parse(urllib2.urlopen(url))
   cnodes=xmldoc.childNodes[0]
-  print cnodes
   amazon_id=cnodes.getElementsByTagName('asin')[0].firstChild.data
   amazon_url='http://ec1.images-amazon.com/images/P/'+amazon_id+'.01.SS170.jpg'
-  print len(amazon_id)
   if str(amazon_id[0])!=' ':
-    print amazon_url
     u=urllib2.urlopen(amazon_url)
     save_albumart(u.read())
     u.close()
