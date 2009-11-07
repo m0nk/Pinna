@@ -1,7 +1,6 @@
 import urllib2
 import os
 import gtk
-import Image
 from xml.dom import minidom
 
 from connection import client
@@ -377,11 +376,9 @@ def filechooser_ok(widget):
   song=song.replace('/','+')
   width=170
   height=170
-  image_file=Image.open(infowindow_wTree.get_widget('filechooser').get_filename())
+  image_file=gtk.gdk.pixbuf_new_from_file_at_size(infowindow_wTree.get_widget('filechooser').get_filename(),width,height)
   infowindow_wTree.get_widget('info_textview').get_buffer().delete(infowindow_wTree.get_widget('info_textview').get_buffer().get_iter_at_line_offset(0,0),infowindow_wTree.get_widget('info_textview').get_buffer().get_iter_at_line_offset(0,1))
-
-  new_image=image_file.resize((width, height), Image.ANTIALIAS)
-  new_image.save(os.getenv("HOME")+'/.pinna/album_art/'+song)
+  image_file.save(os.getenv("HOME")+'/.pinna/album_art/'+song,'jpeg')
   set_albumart()
   infowindow_wTree.get_widget('filechooser').hide()
   return True

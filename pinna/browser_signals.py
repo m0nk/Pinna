@@ -35,10 +35,8 @@ def delete_playlist(widget):
       client.rm(browser_vars.playlist_list[1][selection])
     browser_vars.playlist_list=[[],None]
     change_playlist()
-
       
 #current playlist code
-
 def change_current():
   model=browserwindow_wTree.get_widget('browser_list').get_model()
   browserwindow_wTree.get_widget('browser_list').set_model(None)
@@ -73,7 +71,6 @@ def current_clear(widget):
   client.clear()
   
 #file browser code
-
 def change_browser():
   if browser_vars.browser_list[1]:
     insert_items()
@@ -175,7 +172,6 @@ def handle_scrollbars(view,work='save'):
       adj.page_size=item[0][1]
       adj.upper=item[0][3]-item[0][2]+item[0][0]    
       browserwindow_wTree.get_widget('browser_scroll').set_vadjustment(adj)
-
 ### end universal code
       
 def smart_add(directory):
