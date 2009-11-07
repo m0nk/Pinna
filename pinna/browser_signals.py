@@ -2,10 +2,8 @@ from ui import browserwindow_wTree
 import gtk
 from variables import checks
 from variables import browser_vars
-import gtk.gdk
 from connection import client
 from ui import browser_popups
-
 #playlist code
 
 def change_playlist():
@@ -16,7 +14,7 @@ def change_playlist():
   browserwindow_wTree.get_widget('browser_list').set_model(None)
   for playlist in playlists:
     if 'playlist' in playlist.keys():
-      model.append([playlist['playlist']])
+      model.append([gtk.STOCK_FILE,playlist['playlist']])
       browser_vars.playlist_list[1].append(playlist['playlist'])
   browserwindow_wTree.get_widget('browser_list').set_model(model)
 
@@ -35,8 +33,7 @@ def delete_playlist(widget):
     selections=browserwindow_wTree.get_widget('browser_list').get_selection().get_selected_rows()[1][0]
     for selection in selections:
       client.rm(browser_vars.playlist_list[1][selection])
-    browser_vars.playlist_list[1]=[]
-    browser_vars.playlist_list[0]=None
+    browser_vars.playlist_list=[[],None]
     change_playlist()
 
       
@@ -48,16 +45,12 @@ def change_current():
   model.clear()
   if browser_vars.current_playlist[1]:
     for song in browser_vars.current_playlist[1]:
-      model.append([song])
+      model.append([gtk.STOCK_CDROM,song])
+  if checks.last_song:
+    if checks.last_song[2] in browser_vars.current_playlist[2]:
+      model.set_value(model.get_iter(checks.last_song[0]),1,'<b>'+checks.last_song[1]+'</b>')
   browserwindow_wTree.get_widget('browser_list').set_model(model)
-  if browser_vars.current_playlist[0]:
-    adj=browserwindow_wTree.get_widget('browser_scroll').get_vadjustment()
-    adj.lower=browser_vars.current_playlist[0][0]
-    adj.upper=browser_vars.current_playlist[0][3]-browser_vars.current_playlist[0][2]+browser_vars.current_playlist[0][0]
-    adj.value=browser_vars.current_playlist[0][0]
-    adj.page_size=browser_vars.current_playlist[0][1]
-    browserwindow_wTree.get_widget('browser_scroll').set_vadjustment(adj)
-    
+
 def current_play(widget):
   selection=browserwindow_wTree.get_widget('browser_list').get_selection().get_selected_rows()[1][0][0]
   client.play(selection)
@@ -78,80 +71,19 @@ def create_playlist_show(widget):
 
 def current_clear(widget):
   client.clear()
-  browser_vars.current_playlist[0]=None
   
 #file browser code
 
 def change_browser():
-  playing_song=client.currentsong()
   if browser_vars.browser_list[1]:
-    model=browserwindow_wTree.get_widget('browser_list').get_model()
-    browserwindow_wTree.get_widget('browser_list').set_model(None)
-    model.clear()
-    for song in browser_vars.browser_list[1]:
-      if song[0]=='file' and song[2] in browser_vars.added_songs:
-        if 'file' in playing_song.keys() and song[2]==playing_song['file']:
-          model.append(['<i><b>'+song[1]+'</b></i>'])
-        else:
-          model.append(['<b>'+song[1]+'</b>'])
-      else:
-        model.append([song[1]])
-    browserwindow_wTree.get_widget('browser_list').set_model(model)
+    insert_items()
   else:
     change_directory('')
-  #set scroll
-  if browser_vars.browser_list[0]:
-    adj=browserwindow_wTree.get_widget('browser_scroll').get_vadjustment()
-    adj.lower=browser_vars.browser_list[0][0]
-    adj.value=browser_vars.browser_list[0][0]
-    adj.page_size=browser_vars.browser_list[0][1]
-    adj.upper=browser_vars.browser_list[0][3]-browser_vars.browser_list[0][2]+browser_vars.browser_list[0][0]    
-    browserwindow_wTree.get_widget('browser_scroll').set_vadjustment(adj)
     
 def change_directory(new_directory):
-  browser_vars.browser_list[1]=[]
-  browser_vars.browser_list[0]=None
-  browser_vars.browser_list[2]=[]
-  chunks=client.lsinfo(new_directory)
-  playing_song=client.currentsong()
-  if new_directory:
-    up_directory=''
-    temp=new_directory.split('/')
-    up_directory+='/'.join(temp[0:len(temp)-1])
-    browser_vars.browser_list[1].append(('directory','[..]',up_directory))
-    browser_vars.browser_list[2].append(up_directory)
-  for item in chunks:
-    if 'directory' in item.keys():
-      file_type='directory'
-      file_name=item['directory']
-      browser_vars.browser_list[2].append(file_name)
-      display=file_name.split('/')
-      display=display[len(display)-1].replace('&','&amp;')
-      browser_vars.browser_list[1].append((file_type,display,file_name))
-    if 'file' in item.keys():
-      file_type='file'
-      file_name=item['file']
-      browser_vars.browser_list[2].append(file_name)
-      if 'artist' in item.keys() and 'title' in item.keys():
-        display=item['artist']+' - '+item['title']
-      else:
-        display=file_name.split('/')
-        display=display[len(display)-1]
-      display=display.replace('&','&amp;')
-      browser_vars.browser_list[1].append((file_type,display,file_name))
+  format_browser_vars(client.lsinfo(new_directory))
   if browser_vars.view=='file':
-    model=browserwindow_wTree.get_widget('browser_list').get_model()
-    browserwindow_wTree.get_widget('browser_list').set_model(None)
-    model.clear()
-    for item in browser_vars.browser_list[1]:
-      if item[0]=='file' and  item[2] in browser_vars.added_songs:
-        if 'file' in playing_song.keys() and item[2]==playing_song['file']:
-          model.append(['<i><b>'+item[1]+'</b></i>'])
-        else:
-          model.append(['<b>'+item[1]+'</b>'])
-      else:
-        model.append([item[1]])
-    browserwindow_wTree.get_widget('browser_list').set_model(model)
+    insert_items()
 
 def browser_open(widget):
   selections=browserwindow_wTree.get_widget('browser_list').get_selection().get_selected_rows()[1][0]
@@ -161,57 +93,123 @@ def browser_open(widget):
 def browser_doubleclick():
   selections=browserwindow_wTree.get_widget('browser_list').get_selection().get_selected_rows()[1][0]
   if browser_vars.browser_list[1][selections[0]][0]=='file':
-    if browser_vars.browser_list[1][selections[0]][2] not in browser_vars.added_songs:
+    if browser_vars.browser_list[1][selections[0]][2] not in browser_vars.current_playlist[2]:
       client.add(browser_vars.browser_list[1][selections[0]][2])
     else:
-      client.play(browser_vars.added_songs.index(browser_vars.browser_list[1][selections[0]][2]))
+      client.play(browser_vars.current_playlist[2].index(browser_vars.browser_list[1][selections[0]][2]))
   if browser_vars.browser_list[1][selections[0]][0]=='directory':
     change_directory(browser_vars.browser_list[1][selections[0]][2])
+
+### universal code
+def insert_items():
+  model=browserwindow_wTree.get_widget('browser_list').get_model()
+  model.clear()
+  browserwindow_wTree.get_widget('browser_list').set_model(None)
+  for song in browser_vars.browser_list[1]:
+    if song[0]=='directory':
+      model.append([gtk.STOCK_DIRECTORY,song[1]])
+    if song[0]=='file':
+      model.append([gtk.STOCK_CDROM,song[1]])
+  set_highlights(model)
+  browserwindow_wTree.get_widget('browser_list').set_model(model)
+
+def set_highlights(model):
+  for song in browser_vars.browser_list[1]:
+    if song[0]=='file' and song[2] in browser_vars.current_playlist[2]:
+      index=browser_vars.browser_list[2].index(song[2])
+      liter=model.get_iter(index)
+      if checks.last_song and song[2] == checks.last_song[2]:
+        model.set_value(liter,1,'<i><b>'+song[1]+'</b></i>')
+      else:
+        model.set_value(liter,1,'<b>'+song[1]+'</b>')
+
+def format_browser_vars(song_info,search=False):
+  browser_vars.browser_list=[None,[],[]]
+  for song in song_info:
+    if len(browser_vars.browser_list[1])==0:
+      if 'file' in song.keys() and search==False or 'directory' in song.keys() and search==False:
+        if 'file' in song.keys():
+          item='file'
+        if 'directory' in song.keys():
+          item='directory'
+        if ''+'/'.join(song[item].split('/')[0:len(song[item].split('/'))-1]):
+          up_directory=''+'/'.join(song[item].split('/')[0:len(song[item].split('/'))-2])
+          if not up_directory:
+            up_directory=''
+          browser_vars.browser_list[1].append(('directory','[ .. ]',up_directory))
+          browser_vars.browser_list[2].append('****FILLER****')
+      if search==True:
+        browser_vars.browser_list[1].append(('directory','[ END SEARCH ]',''))    
+        browser_vars.browser_list[2].append('****FILLER****')
+
+    if 'directory' in song.keys():
+      file_type='directory'
+      path=song['directory']
+      display=song['directory'].split('/')[len(song['directory'].split('/'))-1]
+    if 'file' in song.keys():
+      file_type='file'
+      path=song['file']
+      if 'artist' in song.keys() and 'title' in song.keys():
+        display=song['artist']+' - '+song['title']
+      else:
+        display=song['file'].split('/')[len(song['file'].split('/'))-1]
+    if 'playlist' not in song.keys():
+      browser_vars.browser_list[1].append((file_type,display.replace('&','&amp;'),path))
+      browser_vars.browser_list[2].append(path)
+
+def handle_scrollbars(view,work='save'):
+  if view=='file':
+    item=browser_vars.browser_list
+  if view=='playlist':
+    item=browser_vars.playlist_list
+  if view=='current':
+    item=browser_vars.current_playlist
+  if work=='save':
+    adj=browserwindow_wTree.get_widget('browser_scroll').get_vadjustment()
+    item[0]=(adj.value,adj.page_size,adj.lower,adj.upper)
+  if work=='read':
+    if item[0]:
+      adj=browserwindow_wTree.get_widget('browser_scroll').get_vadjustment()
+      adj.lower=item[0][0]
+      adj.value=item[0][0]
+      adj.page_size=item[0][1]
+      adj.upper=item[0][3]-item[0][2]+item[0][0]    
+      browserwindow_wTree.get_widget('browser_scroll').set_vadjustment(adj)
+
+### end universal code
+      
+def smart_add(directory):
+  songs=client.lsinfo(directory)
+  for song in songs:
+    if 'directory' in song.keys():
+      smart_add(song['directory'])
+    if 'file' in song.keys() and song['file'] not in browser_vars.current_playlist[2]:
+      client.add(song['file'])
 
 def browser_add(widget):
   model=browserwindow_wTree.get_widget('browser_list').get_model()
   selections=browserwindow_wTree.get_widget('browser_list').get_selection().get_selected_rows()[1]
   for selection in selections:
-    client.add(browser_vars.browser_list[1][selection[0]][2])
+    if browser_vars.browser_list[1][selection[0]][0]=='file': 
+      if browser_vars.browser_list[1][selection[0]][2] not in browser_vars.current_playlist[2]:
+        client.add(browser_vars.browser_list[1][selection[0]][2])
+    if browser_vars.browser_list[1][selection[0]][0]=='directory':
+      smart_add(browser_vars.browser_list[1][selection[0]][2])
 
 def update_database(widget):
   client.update()
 
 def search(widget):
- playing_song=client.currentsong()['file']
  if browserwindow_wTree.get_widget('browser_mode').get_active()==1:
   query = browserwindow_wTree.get_widget('search_query').get_text()
   term = browserwindow_wTree.get_widget('search_item').get_active_text()
-  model=browserwindow_wTree.get_widget('browser_list').get_model()
-  browserwindow_wTree.get_widget('browser_list').set_model(None)
-  model.clear()
-  browser_vars.browser_list[0]=None
-  browser_vars.browser_list[1]=[]
-  browser_vars.browser_list[2]=[]
-  browser_vars.browser_list[1].append(('directory','[ END SEARCH ]',''))
-  browser_vars.browser_list[2].append('')
-  results = client.search(term,query)
-  for result in results:
-    if 'artist' in result.keys() and 'title' in result.keys():
-      insert=result['artist']+' - '+result['title']
-    else:
-      insert=result['file'].split('/')
-      insert=insert[len(insert)-1]
-    browser_vars.browser_list[1].append(('file',insert.replace('&','&amp;'),result['file']))
-    browser_vars.browser_list[2].append(result['file'])
-  for song in browser_vars.browser_list[1]:
-    if song[0]=='file' and song[2] in browser_vars.added_songs:
-      if song[0]=='file' and song[2] == playing_song:
-        model.append(['<i><b>'+song[1]+'</b></i>'])
-      else:
-        model.append(['<b>'+song[1]+'</b>'])
-    else:
-      model.append([song[1]])
-  browserwindow_wTree.get_widget('browser_list').set_model(model)
+  format_browser_vars(client.search(term,query),True)
+  if browser_vars.view=='file':
+    insert_items()
  
 #bs 
 def close_browser(widget,event):
-  browserwindow_wTree.get_widget('browser_window').hide_all()
+  widget.hide_all()
   return True
 
 def disable_search():
@@ -225,13 +223,7 @@ def enable_search():
   browserwindow_wTree.get_widget('search_button').set_sensitive(True)
 
 def change_browse_mode(widget):
-  adj=browserwindow_wTree.get_widget('browser_scroll').get_vadjustment()
-  if browser_vars.view=='file':
-    browser_vars.browser_list[0]=(adj.value,adj.page_size,adj.lower,adj.upper)
-  if browser_vars.view=='current':
-    browser_vars.current_playlist[0]=(adj.value,adj.page_size,adj.lower,adj.upper)
-  if browser_vars.view=='playlist':
-    browser_vars.playlist_list[0]=(adj.value,adj.page_size,adj.lower,adj.upper)
+  handle_scrollbars(browser_vars.view,'save')
   selection=widget.get_active_text().strip('\n')
   if selection=='File':
     enable_search()
@@ -248,7 +240,8 @@ def change_browse_mode(widget):
     browser_vars.view='playlist'
     change_playlist()
     browserwindow_wTree.get_widget('browser_window').set_title('Pinna - Playlist Browser')
-  
+  handle_scrollbars(browser_vars.view,'read')
+
 def treeview_event(widget,event):
   #left double click
   if event.type==gtk.gdk._2BUTTON_PRESS and event.button==1:
@@ -261,15 +254,18 @@ def treeview_event(widget,event):
     return True
   #right click
   if event.type==gtk.gdk.BUTTON_PRESS and event.button==3:
+    variable=True
     if browser_vars.view=='file':
       browserwindow_wTree.get_widget('file_menu').popup(None,None,None,event.button,event.time)
-    if browser_vars.view=='current':
+    elif browser_vars.view=='current':
       browserwindow_wTree.get_widget('current_menu').popup(None,None,None,event.button,event.time)
-    if browser_vars.view=='playlist':
+    elif browser_vars.view=='playlist':
       browserwindow_wTree.get_widget('playlist_menu').popup(None,None,None,event.button,event.time)
-    return True
+    else:
+      variable=False
+    return variable
 
-def browser_list_hotkey(wdiget,event):
+def browser_list_hotkey(widget,event):
   keypress=event.keyval
   if keypress == 65535: #delete
     if browser_vars.view == 'current':
@@ -285,8 +281,8 @@ def browser_list_hotkey(wdiget,event):
     browserwindow_wTree.get_widget('browser_mode').set_active(2)
   
   if keypress == 65307: #escape
-    close_browser(None,None)
-  
+    browserwindow_wTree.get_widget('browser_window').hide_all()
+
   if keypress == 65379: #insert
     if browser_vars.view=='browser':
       browser_add(None)
@@ -294,11 +290,20 @@ def browser_list_hotkey(wdiget,event):
       merge_playlist(None)
   return True
     
-liststore=gtk.ListStore(str)
+liststore=gtk.ListStore(str,str)
+
 browserwindow_wTree.get_widget("browser_list").set_model(liststore)
-cell = gtk.CellRendererText()
-column = gtk.TreeViewColumn("Pango Markup",cell,markup=0)
-browserwindow_wTree.get_widget("browser_list").append_column(column)
+image_cell=gtk.CellRendererPixbuf()
+text_cell=gtk.CellRendererText()
+column=gtk.TreeViewColumn('song listing')
+
+column.pack_start(image_cell,False)
+column.set_attributes(image_cell,stock_id=0)
+column.pack_start(text_cell,True)
+column.set_attributes(text_cell,markup=1)
+
+browserwindow_wTree.get_widget('browser_list').append_column(column)
+
 browserwindow_wTree.get_widget("browser_list").get_selection().set_mode(gtk.SELECTION_MULTIPLE)
 browserwindow_wTree.get_widget('browser_list').freeze_child_notify()
 
@@ -326,3 +331,4 @@ browserwindow_wTree.signal_autoconnect(events)
 browserwindow_wTree.signal_autoconnect(shared_buttons)
 browserwindow_wTree.signal_autoconnect(current_buttons)
 browserwindow_wTree.signal_autoconnect(playlist_buttons)
+browserwindow_wTree.get_widget('browser_window').show_all()

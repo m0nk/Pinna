@@ -184,7 +184,6 @@ def scrape_lyricwiki():
       u=urllib2.urlopen(data)
       save_lyrics(get_lyrics(u.read()))
       u.close()
-
     else:
       save_lyrics(get_lyrics(data))
   
@@ -193,8 +192,7 @@ def scrape_lyricwiki():
 
 def scrape_lyricsplugin():
   artist=infowindow_wTree.get_widget('artist_entry').get_text().replace(' ','%20')
-  title=infowindow_wTree.get_widget('title_entry').get_text().replace(' ','%20')
-  
+  title=infowindow_wTree.get_widget('title_entry').get_text().replace(' ','%20') 
   url='http://lyricsplugin.com/wmplayer03/plugin/?artist='+artist+'&title='+title
   u=urllib2.urlopen(url)
   lyrics=u.read()
@@ -318,7 +316,7 @@ def showsearch_window(widget):
   infowindow_wTree.get_widget('search_window').show_all()
 
 def close_infowindow(widget,event):
-  infowindow_wTree.get_widget('info_window').hide_all()
+  widget.hide_all()
   return True
 
 def search_for_changed(widget):
@@ -329,7 +327,7 @@ def search_for_changed(widget):
 
 def searchwindow_event(widget,event):
   if event.keyval==65307:
-    close_searchwindow(widget,event)
+    widget.hide_all()
 
 def infowindow_event(widget,event):
   if event.keyval==65307:
@@ -342,7 +340,7 @@ def infowindow_event(widget,event):
     showsearch_window(widget)
 
 def close_searchwindow(widget,event):
-  infowindow_wTree.get_widget('search_window').hide_all()
+  widget.hide_all()
   return True
 
 if not os.path.isdir(os.getenv("HOME")+'/.pinna'):
@@ -365,10 +363,12 @@ def initiate_filechooser(first=False):
     file_filter.add_pattern("*.gif")
     file_filter.add_pattern("*.bmp")
     chooser.add_filter(file_filter)
-  if settings.music_directory:
-    chooser.set_current_folder(settings.music_directory)
   else:
-    chooser.set_current_folder(os.getenv("HOME"))
+    if settings.music_directory:
+      chooser.set_current_folder(settings.music_directory)
+    else:
+      chooser.set_current_folder(os.getenv("HOME"))
+    chooser.show()
 
 def filechooser_ok(widget):
   song=client.currentsong()
@@ -384,18 +384,17 @@ def filechooser_ok(widget):
   new_image.save(os.getenv("HOME")+'/.pinna/album_art/'+song)
   set_albumart()
   infowindow_wTree.get_widget('filechooser').hide()
-  initiate_filechooser()
   return True
 
 def show_filechooser(widget):
-  infowindow_wTree.get_widget('filechooser').show()
+  initiate_filechooser()
 
 def close_filechooser(widget,event=None):
-  infowindow_wTree.get_widget('filechooser').hide()
-  initiate_filechooser()
+  widget.hide()
   return True
 
 initiate_filechooser(True)
+infowindow_wTree.get_widget('filechooser').hide()
 
 buttons={'on_lyric_button_clicked':change_lyrics,'on_artist_button_clicked':change_biography,'on_search_button_clicked':showsearch_window,'on_info_window_delete_event':close_infowindow,'on_info_window_key_press_event':infowindow_event}
 search_buttons={'on_search1_button_clicked':search,'on_search_window_delete_event':close_searchwindow,'on_search_for_changed':search_for_changed,'on_search_window_key_press_event':searchwindow_event,'on_from_file_clicked':show_filechooser}

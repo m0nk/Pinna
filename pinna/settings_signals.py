@@ -50,7 +50,8 @@ def insert_config():
   settingswindow_wTree.get_widget('alarm_hours').set_value(int(settings.alarm_hour))
   settingswindow_wTree.get_widget('alarm_minutes').set_value(int(settings.alarm_minute))
   settingswindow_wTree.get_widget('alarm_volume').set_value(int(settings.alarm_volume))
-  
+  settingswindow_wTree.get_widget('music_directory').set_text(settings.music_directory)
+
 def apply_settings():
   settings.mpd_host=settingswindow_wTree.get_widget('mpd_host').get_text()
   settings.mpd_port=settingswindow_wTree.get_widget('mpd_port').get_text()
@@ -60,6 +61,7 @@ def apply_settings():
   settings.alarm_hour=settingswindow_wTree.get_widget('alarm_hours').get_text()
   settings.alarm_minute=settingswindow_wTree.get_widget('alarm_minutes').get_text()
   settings.alarm_volume=settingswindow_wTree.get_widget('alarm_volume').get_text()
+  settings.music_directory=settingswindow_wTree.get_widget('music_directory').get_text()
   if settings.stop_on_exit==True:
     settings.stop_on_exit='1'
   else:
@@ -91,7 +93,7 @@ def hotkeys(widget,event):
   keypress=event.keyval
   if keypress==65307:
     close_window(None,None)
-  return True
+    return True
   
 buttons={'on_save_button_clicked':save_config,'on_settings_window_delete_event':close_window,'on_settings_window_key_press_event':hotkeys}
 settingswindow_wTree.signal_autoconnect(buttons)

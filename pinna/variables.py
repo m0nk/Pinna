@@ -10,10 +10,12 @@ class settings:
   music_directory= ''
 
 class checks:
-  song=None
+  song=-1
   shuffle='0'
   repeat='0'
-  
+  last_song=None
+  playlist_version=0
+
 class main_vars:
   shuffle_id=None
   repeat_id=None
@@ -25,9 +27,7 @@ class info_vars:
   
 class browser_vars:
   view=None
-  added_songs=[]
   browser_list=[None,[],[]]
   playlist_list=[None,[]]
-  current_playlist=[None,[]]
-  playlist_version=0
-  last_song=None 
+  current_playlist=[None,[],[]]
+

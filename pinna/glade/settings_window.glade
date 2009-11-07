@@ -1,40 +1,46 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.2 on Wed Aug 12 00:59:03 2009 -->
+<?xml version="1.0"?>
 <glade-interface>
+  <!-- interface-requires gtk+ 2.6 -->
+  <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkWindow" id="settings_window">
     <property name="has_focus">True</property>
     <property name="can_default">True</property>
     <property name="has_default">True</property>
     <property name="title" translatable="yes">Pinna - Settings Window</property>
     <property name="resizable">False</property>
+    <property name="modal">True</property>
+    <property name="destroy_with_parent">True</property>
+    <property name="type_hint">dialog</property>
+    <property name="skip_taskbar_hint">True</property>
+    <property name="skip_pager_hint">True</property>
     <signal name="key_press_event" handler="on_settings_window_key_press_event"/>
     <signal name="delete_event" handler="on_settings_window_delete_event"/>
     <child>
       <widget class="GtkLayout" id="layout1">
         <property name="width_request">269</property>
-        <property name="height_request">228</property>
+        <property name="height_request">252</property>
         <property name="visible">True</property>
         <property name="width">269</property>
         <property name="height">228</property>
         <child>
           <widget class="GtkButton" id="save_button">
+            <property name="label" translatable="yes">Save</property>
             <property name="width_request">79</property>
             <property name="height_request">30</property>
             <property name="visible">True</property>
-            <property name="label" translatable="yes">Save</property>
-            <property name="response_id">0</property>
+            <property name="can_focus">False</property>
+            <property name="receives_default">False</property>
             <signal name="clicked" handler="on_save_button_clicked"/>
           </widget>
           <packing>
             <property name="x">186</property>
-            <property name="y">196</property>
+            <property name="y">220</property>
           </packing>
         </child>
         <child>
           <widget class="GtkEntry" id="mpd_host">
             <property name="width_request">172</property>
-            <property name="height_request">20</property>
+            <property name="height_request">22</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
           </widget>
@@ -46,7 +52,7 @@
         <child>
           <widget class="GtkEntry" id="mpd_port">
             <property name="width_request">172</property>
-            <property name="height_request">20</property>
+            <property name="height_request">22</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
           </widget>
@@ -58,7 +64,7 @@
         <child>
           <widget class="GtkEntry" id="mpd_password">
             <property name="width_request">172</property>
-            <property name="height_request">20</property>
+            <property name="height_request">22</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="visibility">False</property>
@@ -71,10 +77,10 @@
         <child>
           <widget class="GtkLabel" id="label1">
             <property name="width_request">92</property>
-            <property name="height_request">20</property>
+            <property name="height_request">22</property>
             <property name="visible">True</property>
             <property name="label" translatable="yes">Host</property>
-            <property name="justify">GTK_JUSTIFY_RIGHT</property>
+            <property name="justify">right</property>
           </widget>
           <packing>
             <property name="x">1</property>
@@ -84,7 +90,7 @@
         <child>
           <widget class="GtkLabel" id="label2">
             <property name="width_request">92</property>
-            <property name="height_request">20</property>
+            <property name="height_request">22</property>
             <property name="visible">True</property>
             <property name="label" translatable="yes">Port</property>
           </widget>
@@ -96,7 +102,7 @@
         <child>
           <widget class="GtkLabel" id="label3">
             <property name="width_request">92</property>
-            <property name="height_request">20</property>
+            <property name="height_request">22</property>
             <property name="visible">True</property>
             <property name="label" translatable="yes">Password</property>
           </widget>
@@ -108,7 +114,7 @@
         <child>
           <widget class="GtkLabel" id="label4">
             <property name="width_request">92</property>
-            <property name="height_request">20</property>
+            <property name="height_request">22</property>
             <property name="visible">True</property>
             <property name="label" translatable="yes">Stop on Exit</property>
           </widget>
@@ -120,10 +126,10 @@
         <child>
           <widget class="GtkCheckButton" id="stop_on_exit">
             <property name="width_request">100</property>
-            <property name="height_request">20</property>
+            <property name="height_request">22</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="response_id">0</property>
+            <property name="receives_default">False</property>
             <property name="draw_indicator">True</property>
           </widget>
           <packing>
@@ -134,7 +140,7 @@
         <child>
           <widget class="GtkLabel" id="label5">
             <property name="width_request">92</property>
-            <property name="height_request">20</property>
+            <property name="height_request">22</property>
             <property name="visible">True</property>
             <property name="label" translatable="yes">Alarm Enable</property>
           </widget>
@@ -146,10 +152,10 @@
         <child>
           <widget class="GtkCheckButton" id="alarm_enable">
             <property name="width_request">100</property>
-            <property name="height_request">20</property>
+            <property name="height_request">22</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="response_id">0</property>
+            <property name="receives_default">False</property>
             <property name="draw_indicator">True</property>
           </widget>
           <packing>
@@ -160,7 +166,7 @@
         <child>
           <widget class="GtkLabel" id="label6">
             <property name="width_request">92</property>
-            <property name="height_request">20</property>
+            <property name="height_request">22</property>
             <property name="visible">True</property>
             <property name="label" translatable="yes">Alarm Time</property>
           </widget>
@@ -172,7 +178,7 @@
         <child>
           <widget class="GtkSpinButton" id="alarm_hours">
             <property name="width_request">50</property>
-            <property name="height_request">20</property>
+            <property name="height_request">22</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="adjustment">0 0 23 1 0 0</property>
@@ -188,7 +194,7 @@
         <child>
           <widget class="GtkSpinButton" id="alarm_minutes">
             <property name="width_request">50</property>
-            <property name="height_request">20</property>
+            <property name="height_request">22</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="adjustment">0 0 59 1 0 0</property>
@@ -202,7 +208,7 @@
         <child>
           <widget class="GtkLabel" id="label7">
             <property name="width_request">92</property>
-            <property name="height_request">20</property>
+            <property name="height_request">22</property>
             <property name="visible">True</property>
             <property name="label" translatable="yes">Alarm Volume</property>
           </widget>
@@ -214,7 +220,7 @@
         <child>
           <widget class="GtkSpinButton" id="alarm_volume">
             <property name="width_request">50</property>
-            <property name="height_request">20</property>
+            <property name="height_request">22</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="adjustment">0 0 100 1 10 10</property>
@@ -222,6 +228,31 @@
           <packing>
             <property name="x">96</property>
             <property name="y">168</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkLabel" id="label8">
+            <property name="width_request">126</property>
+            <property name="height_request">22</property>
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">music directory</property>
+          </widget>
+          <packing>
+            <property name="x">1</property>
+            <property name="y">192</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkEntry" id="music_directory">
+            <property name="width_request">152</property>
+            <property name="height_request">22</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="invisible_char">&#x25CF;</property>
+          </widget>
+          <packing>
+            <property name="x">117</property>
+            <property name="y">192</property>
           </packing>
         </child>
       </widget>

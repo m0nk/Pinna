@@ -74,17 +74,10 @@ class ask_yes_no:
       self.dialog.hide_all()
       return False
 
-#get_input=dialog_input()
-#get_yes_no=ask_yes_no()
-
 mainwindow_wTree=gtk.glade.XML(root_path+"glade/main_window.glade")
-
 settingswindow_wTree=gtk.glade.XML(root_path+"glade/settings_window.glade")
-
 browserwindow_wTree=gtk.glade.XML(root_path+"glade/browser_window.glade")
-
 infowindow_wTree=gtk.glade.XML(root_path+"glade/info_window.glade")
-
 default_albumart=gtk.gdk.pixbuf_new_from_file(root_path+"glade/no_image.png")
 
 notifier=init_notifier()

@@ -103,6 +103,7 @@
     <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="destroy_with_parent">True</property>
+    <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="skip_pager_hint">True</property>
     <signal name="key_press_event" handler="on_search_window_key_press_event"/>
@@ -261,7 +262,11 @@ Biography
   </widget>
   <widget class="GtkFileChooserDialog" id="filechooser">
     <property name="border_width">5</property>
-    <property name="type_hint">normal</property>
+    <property name="modal">True</property>
+    <property name="destroy_with_parent">True</property>
+    <property name="type_hint">dialog</property>
+    <property name="skip_taskbar_hint">True</property>
+    <property name="skip_pager_hint">True</property>
     <property name="deletable">False</property>
     <property name="has_separator">False</property>
     <signal name="delete_event" handler="on_filechooser_delete_event"/>
