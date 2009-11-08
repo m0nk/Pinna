@@ -6,28 +6,28 @@ from ui import *
 from scrapers import change_info
 import time
 
-def song_change():
-  current_song=client.currentsong()
-  artist=''
-  title=''
-  album=''
-  if 'artist' in current_song:
-    artist=current_song['artist']
-  if 'title' in current_song:
-    title=current_song['title']
-  if 'album' in current_song:
-    album=current_song['album']  
-  if artist and title:
-    insert = artist+' - '+title
+def get_insert(item):
+  song=['','','','']
+  if 'album' in item.keys():
+    song[3]=item['album']
+  if 'artist' in item.keys():
+    song[1]=item['artist']
+  if 'title' in item.keys():
+    song[2]=item['title']
+  if song[1] and song[2]:
+    song[0]=song[1]+' - '+song[2]
+    song[0]=song[0].replace('&','&amp;')
   else:
-    insert=current_song['file'].split('/')
-    insert=insert[len(insert)-1]
-  insert=insert.replace('&','&amp;')
+    song[0]=str(item['file'].split('/')[len(item['file'].split('/'))-1]).replace('&','&amp;')
+  return song
 
-  mainwindow_wTree.get_widget('current_song_label').set_property("label","<span font_size='12344'>"+insert+"</span>")
-  infowindow_wTree.get_widget('artist_entry').set_text(artist)
-  infowindow_wTree.get_widget('title_entry').set_text(title)
-  infowindow_wTree.get_widget('album_entry').set_text(album)
+def song_change():
+  song=get_insert(client.currentsong())
+  
+  mainwindow_wTree.get_widget('current_song_label').set_property("label","<span font_size='12344'>"+song[0]+"</span>")
+  infowindow_wTree.get_widget('artist_entry').set_text(song[1])
+  infowindow_wTree.get_widget('title_entry').set_text(song[2])
+  infowindow_wTree.get_widget('album_entry').set_text(song[3])
 
 def parse_time(mtime):
   new_time=""
@@ -61,12 +61,6 @@ def handle_toggles(status):
     mainwindow_wTree.get_widget('repeat_button').handler_unblock(main_vars.repeat_id)
     checks.repeat=repeat
 
-def get_insert(item):
-  if 'artist' in item.keys() and 'title' in item.keys():
-    return str(item['artist']+' - '+item['title']).replace('&','&amp;')
-  else:
-    return str(item['file'].split('/')[len(item['file'].split('/'))-1]).replace('&','&amp;')
-
 def set_file_browser(oldsongs):
   model=browserwindow_wTree.get_widget('browser_list').get_model()
   for song in browser_vars.browser_list[2]:
@@ -83,11 +77,6 @@ def set_file_browser(oldsongs):
 def set_current_browser(deleted,to_modify,old_length):
   model=browserwindow_wTree.get_widget('browser_list').get_model()
   browserwindow_wTree.get_widget('browser_list').set_model(None)
-  playing_song=client.currentsong()
-  if len(playing_song.keys())!=0:
-    checks.last_song=(playing_song['pos'],get_insert(playing_song),playing_song['file'])
-  else:
-    checks.last_song=None
   if deleted:
     for i in range(old_length-1,old_length-deleted-1,-1):
       model.remove(model.get_iter(i))
@@ -99,7 +88,12 @@ def set_current_browser(deleted,to_modify,old_length):
       except:
         model.append([gtk.STOCK_CDROM,item[1]])
   browserwindow_wTree.get_widget('browser_list').set_model(model)
-  highlight_song()
+  playing_song=client.currentsong()
+  if len(playing_song.keys())!=0:
+    if checks.last_song:
+     if checks.last_song[0]!=playing_song['pos']:
+      checks.last_song=(playing_song['pos'],get_insert(playing_song)[0],playing_song['file'])
+      highlight_song()
 
 def highlight_song():
   if browser_vars.view=='current':
@@ -108,10 +102,10 @@ def highlight_song():
     if checks.last_song:
       model.set_value(model.get_iter(checks.last_song[0]),1,checks.last_song[1])
     if len(playing_song.keys())!=0:
-      checks.last_song=(int(playing_song['pos']),get_insert(playing_song),playing_song['file'])
+      checks.last_song=(int(playing_song['pos']),get_insert(playing_song)[0],playing_song['file'])
       liter=model.get_iter(int(playing_song['pos']))
-      model.set_value(liter,1,'<b>'+get_insert(playing_song)+'</b>')
-      checks.last_song=(int(playing_song['pos']),get_insert(playing_song),playing_song['file'])
+      model.set_value(liter,1,'<b>'+get_insert(playing_song)[0]+'</b>')
+      checks.last_song=(int(playing_song['pos']),get_insert(playing_song)[0],playing_song['file'])
 
   if browser_vars.view=='file':
     model=browserwindow_wTree.get_widget('browser_list').get_model()
@@ -121,13 +115,13 @@ def highlight_song():
         if checks.last_song[2] in browser_vars.browser_list[2] and checks.last_song[0]!=int(playing_song['pos']):
           liter=model.get_iter(browser_vars.browser_list[2].index(checks.last_song[2]))
           model.set_value(liter,1,'<b>'+checks.last_song[1]+'</b>')        
-        checks.last_song=(int(playing_song['pos']),get_insert(playing_song),playing_song['file'])
+        checks.last_song=(int(playing_song['pos']),get_insert(playing_song)[0],playing_song['file'])
         if checks.last_song[2] in browser_vars.browser_list[2]:
           liter=model.get_iter(browser_vars.browser_list[2].index(checks.last_song[2]))
           model.set_value(liter,1,'<b><i>'+checks.last_song[1]+'</i></b>')
       else:
         if not checks.last_song:
-          checks.last_song=(int(playing_song['pos']),get_insert(playing_song),playing_song['file'])
+          checks.last_song=(int(playing_song['pos']),get_insert(playing_song)[0],playing_song['file'])
           if checks.last_song[2] in browser_vars.browser_list[2]:
             highlight_song()
 
@@ -147,12 +141,12 @@ def update_current_playlist(version):
     for change in changes:
       if int(change['pos'])>len(browser_vars.current_playlist[2])-1:
         browser_vars.current_playlist[2].append(change['file'])
-        browser_vars.current_playlist[1].append(get_insert(change))
-        to_modify.append((int(change['pos']),get_insert(change),change['file']))
+        browser_vars.current_playlist[1].append(get_insert(change)[0])
+        to_modify.append((int(change['pos']),get_insert(change)[0],change['file']))
       if browser_vars.current_playlist[2][int(change['pos'])]!=change['file']:
         browser_vars.current_playlist[2][int(change['pos'])]=change['file']
-        browser_vars.current_playlist[1][int(change['pos'])]=get_insert(change)
-        to_modify.append((int(change['pos']),get_insert(change),change['file']))
+        browser_vars.current_playlist[1][int(change['pos'])]=get_insert(change)[0]
+        to_modify.append((int(change['pos']),get_insert(change)[0],change['file']))
            
   browser_vars.current_playlist[1]=browser_vars.current_playlist[1][:playlist_length]
   browser_vars.current_playlist[2]=browser_vars.current_playlist[2][:playlist_length]

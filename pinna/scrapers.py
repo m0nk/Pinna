@@ -11,26 +11,35 @@ from variables import info_vars
 from variables import settings 
 from ui import notifier
 
-
 def display_popup():
   current_song=client.currentsong()
   popup=[]          
   if 'title' in current_song.keys():
-    if len(current_song['title'])<=25:
+    if len(current_song['title'])<=30:
       popup.append(current_song['title'])
     else:
-      popup.append(current_song['title'][0:25])
+      popup.append(current_song['title'][0:30])
   else:
     insert=current_song['file'].split('/')
     insert=insert[len(insert)-1]
-    if len(insert)<=25:
+    if len(insert)<=30:
       popup.append(insert)
     else:
-      popup.append(insert[0:25])
+      popup.append(insert[0:30])
   if 'artist' in current_song.keys():
     popup.append('by '+current_song['artist'])
     if 'album' in current_song.keys():
-      popup[1]+=' on '+current_song['album']
+      if len(current_song['album']+' on ')<=30:
+        popup[1]+=' on '+current_song['album']
+      else:
+        popup[1]+=' on '+current_song['album'][0:30]
+    else:
+      popup[1]+=' on unknown album'
+  else:
+    if len(popup)==2:
+      popup[1]='by unknown artist '+popup[1]
+    else:
+      popup.append('by unknown artist on unknown album')
   notifier.update(popup[0],popup[1])
   notifier.show()
 
@@ -233,7 +242,9 @@ def save_albumart(artwork):
 def scrape_rhapsody(artist,album):
   artist=artist.replace(' ','-')
   album=album.replace(' ','-')
+  print 'rhapsody'
   url='http://rhapsody.com/'+artist+'/'+album+'/data.xml'
+  print url
   cnodes=minidom.parse(urllib2.urlopen(url)).childNodes
   if len(cnodes)>1:
     cnodes=cnodes[1]
@@ -245,6 +256,7 @@ def scrape_rhapsody(artist,album):
       u=urllib2.urlopen(url)
       save_albumart(u.read())
       u.close()
+    print url
     return True
   else:
     return False
@@ -252,11 +264,14 @@ def scrape_rhapsody(artist,album):
 def scrape_amazon(artist,album):
   artist=artist.replace(' ','+')
   album=album.replace(' ','+')
+  print '\n'
   url="http://musicbrainz.org/ws/1/release/?type=xml&artist='"+artist+"'&title='"+album+"'"
+  print url
   xmldoc=minidom.parse(urllib2.urlopen(url))
   cnodes=xmldoc.childNodes[0]
   amazon_id=cnodes.getElementsByTagName('asin')[0].firstChild.data
   amazon_url='http://ec1.images-amazon.com/images/P/'+amazon_id+'.01.SS170.jpg'
+  print amazon_url
   if str(amazon_id[0])!=' ':
     u=urllib2.urlopen(amazon_url)
     save_albumart(u.read())

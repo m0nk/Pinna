@@ -13,8 +13,6 @@ def init_notifier():
   notifier=pynotify.Notification('testtickles')
   notifier.set_urgency(pynotify.URGENCY_LOW)
   notifier.set_timeout(3000)
-  notifier.set_hint("x",0)
-  notifier.set_hint('y',0)
   return notifier
 
 class dialog_input:

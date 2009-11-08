@@ -6,6 +6,22 @@ from connection import client
 from ui import browser_popups
 #playlist code
 
+
+def get_insert(item):
+  song=['','','','']
+  if 'album' in item.keys():
+    song[3]=item['album']
+  if 'artist' in item.keys():
+    song[1]=item['artist']
+  if 'title' in item.keys():
+    song[2]=item['title']
+  if song[1] and song[2]:
+    song[0]=song[1]+' - '+song[2]
+    song[0]=song[0].replace('&','&amp;')
+  else:
+    song[0]=str(item['file'].split('/')[len(item['file'].split('/'))-1]).replace('&','&amp;')
+  return song
+
 def change_playlist():
   browser_vars.playlist_list=[None,[]]
   playlists=client.lsinfo('')
@@ -85,7 +101,8 @@ def change_directory(new_directory):
 def browser_open(widget):
   selections=browserwindow_wTree.get_widget('browser_list').get_selection().get_selected_rows()[1][0]
   selection=selections[0]
-  change_directory(browser_vars.browser_list[1][selection][2])
+  if browser_vars.browser_list[1][selection][0]=='directory':
+    change_directory(browser_vars.browser_list[1][selection][2])
 
 def browser_doubleclick():
   selections=browserwindow_wTree.get_widget('browser_list').get_selection().get_selected_rows()[1][0]
@@ -142,16 +159,13 @@ def format_browser_vars(song_info,search=False):
     if 'directory' in song.keys():
       file_type='directory'
       path=song['directory']
-      display=song['directory'].split('/')[len(song['directory'].split('/'))-1]
+      display=song['directory'].split('/')[len(song['directory'].split('/'))-1].replace('&','&amp;')
     if 'file' in song.keys():
       file_type='file'
       path=song['file']
-      if 'artist' in song.keys() and 'title' in song.keys():
-        display=song['artist']+' - '+song['title']
-      else:
-        display=song['file'].split('/')[len(song['file'].split('/'))-1]
+      display=get_insert(song)[0]
     if 'playlist' not in song.keys():
-      browser_vars.browser_list[1].append((file_type,display.replace('&','&amp;'),path))
+      browser_vars.browser_list[1].append((file_type,display,path))
       browser_vars.browser_list[2].append(path)
 
 def handle_scrollbars(view,work='save'):
@@ -327,4 +341,4 @@ browserwindow_wTree.signal_autoconnect(events)
 browserwindow_wTree.signal_autoconnect(shared_buttons)
 browserwindow_wTree.signal_autoconnect(current_buttons)
 browserwindow_wTree.signal_autoconnect(playlist_buttons)
-browserwindow_wTree.get_widget('browser_window').show_all()
+browserwindow_wTree.get_widget('browser_window').hide_all()
