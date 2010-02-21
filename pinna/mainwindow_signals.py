@@ -110,7 +110,6 @@ def hotkeys(widget,event):
       hide_albumart()
     else:
       show_albumart()
-  print event
   return True
 
 ### tray code

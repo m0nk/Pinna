@@ -4,6 +4,7 @@ from variables import checks
 from variables import browser_vars
 from connection import client
 from ui import browser_popups
+import operator
 #playlist code
 
 
@@ -54,14 +55,15 @@ def delete_playlist(widget):
       
 #current playlist code
 def change_current():
+  current_playlist_files=map(operator.itemgetter(2),browser_vars.current_playlist[1])
   model=browserwindow_wTree.get_widget('browser_list').get_model()
   browserwindow_wTree.get_widget('browser_list').set_model(None)
   model.clear()
   if browser_vars.current_playlist[1]:
     for song in browser_vars.current_playlist[1]:
-      model.append([gtk.STOCK_CDROM,song])
+      model.append([gtk.STOCK_CDROM,song[1]])
   if checks.last_song:
-    if checks.last_song[2] in browser_vars.current_playlist[2]:
+    if checks.last_song[2] in current_playlist_files:
       model.set_value(model.get_iter(checks.last_song[0]),1,'<b>'+checks.last_song[1]+'</b>')
   browserwindow_wTree.get_widget('browser_list').set_model(model)
 
@@ -73,7 +75,7 @@ def current_delete(widget):
   selections=browserwindow_wTree.get_widget('browser_list').get_selection().get_selected_rows()[1]
   new_selections=[]
   for selection in selections:
-    new_selections.append(selection[0])
+    new_selections.append(browser_vars.current_playlist[1][selection[0]][0])
   new_selections.sort(reverse=True)
   for selection in new_selections:
     client.delete(selection)
@@ -105,12 +107,13 @@ def browser_open(widget):
     change_directory(browser_vars.browser_list[1][selection][2])
 
 def browser_doubleclick():
+  current_playlist_files=map(operator.itemgetter(2),browser_vars.current_playlist[1])
   selections=browserwindow_wTree.get_widget('browser_list').get_selection().get_selected_rows()[1][0]
   if browser_vars.browser_list[1][selections[0]][0]=='file':
-    if browser_vars.browser_list[1][selections[0]][2] not in browser_vars.current_playlist[2]:
+    if browser_vars.browser_list[1][selections[0]][2] not in current_playlist_files:
       client.add(browser_vars.browser_list[1][selections[0]][2])
     else:
-      client.play(browser_vars.current_playlist[2].index(browser_vars.browser_list[1][selections[0]][2]))
+      client.play(browser_vars.current_playlist[1][current_playlist_files.index(browser_vars.browser_list[1][selections[0]][2])][0])
   if browser_vars.browser_list[1][selections[0]][0]=='directory':
     change_directory(browser_vars.browser_list[1][selections[0]][2])
 
@@ -128,9 +131,11 @@ def insert_items():
   browserwindow_wTree.get_widget('browser_list').set_model(model)
 
 def set_highlights(model):
+  current_playlist_files=map(operator.itemgetter(2),browser_vars.current_playlist[1])
+  browser_files=map(operator.itemgetter(2),browser_vars.browser_list[1])
   for song in browser_vars.browser_list[1]:
-    if song[0]=='file' and song[2] in browser_vars.current_playlist[2]:
-      index=browser_vars.browser_list[2].index(song[2])
+    if song[0]=='file' and song[2] in current_playlist_files:
+      index=browser_files.index(song[2])
       liter=model.get_iter(index)
       if checks.last_song and song[2] == checks.last_song[2]:
         model.set_value(liter,1,'<i><b>'+song[1]+'</b></i>')
@@ -138,23 +143,14 @@ def set_highlights(model):
         model.set_value(liter,1,'<b>'+song[1]+'</b>')
 
 def format_browser_vars(song_info,search=False):
-  browser_vars.browser_list=[None,[],[]]
+  browser_vars.browser_list=[None,[]]
   for song in song_info:
-    if len(browser_vars.browser_list[1])==0:
+    if len(browser_vars.browser_list[1])!=0:
       if 'file' in song.keys() and search==False or 'directory' in song.keys() and search==False:
         if 'file' in song.keys():
           item='file'
         if 'directory' in song.keys():
           item='directory'
-        if ''+'/'.join(song[item].split('/')[0:len(song[item].split('/'))-1]):
-          up_directory=''+'/'.join(song[item].split('/')[0:len(song[item].split('/'))-2])
-          if not up_directory:
-            up_directory=''
-          browser_vars.browser_list[1].append(('directory','[ .. ]',up_directory))
-          browser_vars.browser_list[2].append('****FILLER****')
-      if search==True:
-        browser_vars.browser_list[1].append(('directory','[ END SEARCH ]',''))    
-        browser_vars.browser_list[2].append('****FILLER****')
 
     if 'directory' in song.keys():
       file_type='directory'
@@ -166,7 +162,18 @@ def format_browser_vars(song_info,search=False):
       display=get_insert(song)[0]
     if 'playlist' not in song.keys():
       browser_vars.browser_list[1].append((file_type,display,path))
-      browser_vars.browser_list[2].append(path)
+
+  browser_vars.browser_list[1]=sorted(browser_vars.browser_list[1], key=operator.itemgetter(1))  
+  
+  up_sample=browser_vars.browser_list[1][0]
+  up_directory=''+'/'.join(up_sample[2].split('/')[0:len(up_sample[2].split('/'))-2])
+
+  if search!='True' and len(up_sample[2].split('/'))>1:
+    browser_vars.browser_list[1].insert(0,('directory','[ .. ]',up_directory))
+  if search=='True':
+    browser_vars.browser_list[1].insert(0,('drectory','[ END SEARCH ]',''))
+
+
 
 def handle_scrollbars(view,work='save'):
   if view=='file':
@@ -190,18 +197,20 @@ def handle_scrollbars(view,work='save'):
       
 def smart_add(directory):
   songs=client.lsinfo(directory)
+  current_playlist_files=map(operator.itemgetter(2),browser_vars.current_playlist[1])
   for song in songs:
     if 'directory' in song.keys():
       smart_add(song['directory'])
-    if 'file' in song.keys() and song['file'] not in browser_vars.current_playlist[2]:
+    if 'file' in song.keys() and song['file'] not in current_playlist_files:
       client.add(song['file'])
 
 def browser_add(widget):
+  current_playlist_files=map(operator.itemgetter(2),browser_vars.current_playlist[1])
   model=browserwindow_wTree.get_widget('browser_list').get_model()
   selections=browserwindow_wTree.get_widget('browser_list').get_selection().get_selected_rows()[1]
   for selection in selections:
     if browser_vars.browser_list[1][selection[0]][0]=='file': 
-      if browser_vars.browser_list[1][selection[0]][2] not in browser_vars.current_playlist[2]:
+      if browser_vars.browser_list[1][selection[0]][2] not in current_playlist_files:
         client.add(browser_vars.browser_list[1][selection[0]][2])
     if browser_vars.browser_list[1][selection[0]][0]=='directory':
       smart_add(browser_vars.browser_list[1][selection[0]][2])

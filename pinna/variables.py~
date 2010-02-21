@@ -29,5 +29,5 @@ class browser_vars:
   view=None
   browser_list=[None,[]]
   playlist_list=[None,[]]
-  current_playlist=[None,[]]
+  current_playlist=[None,[],[]]
 

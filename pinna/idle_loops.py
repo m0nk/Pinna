@@ -5,6 +5,7 @@ from variables import *
 from ui import *
 from scrapers import change_info
 import time
+import operator
 
 def get_insert(item):
   song=['','','','']
@@ -28,6 +29,7 @@ def song_change():
   infowindow_wTree.get_widget('artist_entry').set_text(song[1])
   infowindow_wTree.get_widget('title_entry').set_text(song[2])
   infowindow_wTree.get_widget('album_entry').set_text(song[3])
+  highlight_song()
 
 def parse_time(mtime):
   new_time=""
@@ -63,16 +65,21 @@ def handle_toggles(status):
 
 def set_file_browser(oldsongs):
   model=browserwindow_wTree.get_widget('browser_list').get_model()
-  for song in browser_vars.browser_list[2]:
-    if song in browser_vars.current_playlist[2] and song not in oldsongs:
-      index=browser_vars.browser_list[2].index(song)
+  current_playlist_files=map(operator.itemgetter(2),browser_vars.current_playlist[1])
+  browser_files=map(operator.itemgetter(2),browser_vars.browser_list[1])
+  ### set new highlights
+  for song in current_playlist_files:
+    if song in current_playlist_files and song in browser_files:
+      index=browser_files.index(song)
       liter=model.get_iter(index)
       model.set_value(liter,1,'<b>'+browser_vars.browser_list[1][index][1]+'</b>')
-    if song not in browser_vars.current_playlist[2] and song in oldsongs:
-      index=browser_vars.browser_list[2].index(song)
+  ### remove old highlights
+  for song in oldsongs:
+    if song in browser_files and song not in current_playlist_files:
+      index=browser_files.index(song)
       liter=model.get_iter(index)
-      model.set_value(liter,1,browser_vars.browser_list[1][index][1])    
-  highlight_song()
+      model.set_value(liter,1,browser_vars.browser_list[1][index][1])
+  #highlight_song()
 
 def set_current_browser(deleted,to_modify,old_length):
   model=browserwindow_wTree.get_widget('browser_list').get_model()
@@ -95,43 +102,39 @@ def set_current_browser(deleted,to_modify,old_length):
       checks.last_song=(playing_song['pos'],get_insert(playing_song)[0],playing_song['file'])
       highlight_song()
 
+
 def highlight_song():
+  playing_song=client.currentsong()
+  model=browserwindow_wTree.get_widget('browser_list').get_model()
   if browser_vars.view=='current':
-    model=browserwindow_wTree.get_widget('browser_list').get_model()
-    playing_song=client.currentsong()
     if checks.last_song:
-      model.set_value(model.get_iter(checks.last_song[0]),1,checks.last_song[1])
-    if len(playing_song.keys())!=0:
-      checks.last_song=(int(playing_song['pos']),get_insert(playing_song)[0],playing_song['file'])
-      liter=model.get_iter(int(playing_song['pos']))
-      model.set_value(liter,1,'<b>'+get_insert(playing_song)[0]+'</b>')
-      checks.last_song=(int(playing_song['pos']),get_insert(playing_song)[0],playing_song['file'])
-
+      if checks.last_song[0]!=int(playing_song['pos']):
+        model.set_value(model.get_iter(checks.last_song[0]),1,checks.last_song[1])
+    checks.last_song=(int(playing_song['pos']),get_insert(playing_song)[0],playing_song['file'])
+    model.set_value(model.get_iter(checks.last_song[0]),1,'<b>'+checks.last_song[1]+'</b>')
   if browser_vars.view=='file':
-    model=browserwindow_wTree.get_widget('browser_list').get_model()
-    playing_song=client.currentsong()
-    if len(playing_song.keys())!=0:
-      if checks.last_song:
-        if checks.last_song[2] in browser_vars.browser_list[2] and checks.last_song[0]!=int(playing_song['pos']):
-          liter=model.get_iter(browser_vars.browser_list[2].index(checks.last_song[2]))
-          model.set_value(liter,1,'<b>'+checks.last_song[1]+'</b>')        
-        checks.last_song=(int(playing_song['pos']),get_insert(playing_song)[0],playing_song['file'])
-        if checks.last_song[2] in browser_vars.browser_list[2]:
-          liter=model.get_iter(browser_vars.browser_list[2].index(checks.last_song[2]))
-          model.set_value(liter,1,'<b><i>'+checks.last_song[1]+'</i></b>')
-      else:
-        if not checks.last_song:
-          checks.last_song=(int(playing_song['pos']),get_insert(playing_song)[0],playing_song['file'])
-          if checks.last_song[2] in browser_vars.browser_list[2]:
-            highlight_song()
-
+    if checks.last_song:
+      browser_files=map(operator.itemgetter(2),browser_vars.browser_list[1])
+      if checks.last_song[2] in browser_files:
+        index=browser_files.index(checks.last_song[2])
+        liter=model.get_iter(index)
+        model.set_value(liter,1,'<b>'+checks.last_song[1]+'</b>')
+      if playing_song['file'] in browser_files:
+        index=browser_files.index(playing_song['file'])
+        liter=model.get_iter(index)
+        model.set_value(liter,1,'<b><i>'+get_insert(playing_song)[0]+'</i></b>')
+    if 'pos' in playing_song.keys():
+      checks.last_song=(int(playing_song['pos']),get_insert(playing_song)[0],playing_song['file'])
 
 def update_current_playlist(version):
   model=browserwindow_wTree.get_widget('browser_list').get_model()
   changes=client.plchanges(version)
-  oldsongs=browser_vars.current_playlist[2][:]
+  current_playlist_files=map(operator.itemgetter(2),browser_vars.current_playlist[1])
+  oldsongs=current_playlist_files[:]
   playlist_length=int(client.status()['playlistlength'])
-  old_length=len(browser_vars.current_playlist[2][:])
+  if playlist_length==0:
+    checks.last_song=None
+  old_length=len(oldsongs)
   if old_length > playlist_length:
     deleted=old_length-playlist_length
   else:
@@ -139,17 +142,15 @@ def update_current_playlist(version):
   to_modify=[]
   if len(changes)>0:
     for change in changes:
-      if int(change['pos'])>len(browser_vars.current_playlist[2])-1:
-        browser_vars.current_playlist[2].append(change['file'])
-        browser_vars.current_playlist[1].append(get_insert(change)[0])
+      if int(change['pos'])>len(current_playlist_files)-1:
+        browser_vars.current_playlist[1].append((change['pos'],get_insert(change)[0],change['file']))
         to_modify.append((int(change['pos']),get_insert(change)[0],change['file']))
-      if browser_vars.current_playlist[2][int(change['pos'])]!=change['file']:
-        browser_vars.current_playlist[2][int(change['pos'])]=change['file']
-        browser_vars.current_playlist[1][int(change['pos'])]=get_insert(change)[0]
-        to_modify.append((int(change['pos']),get_insert(change)[0],change['file']))
-           
+      else:
+        if current_playlist_files[int(change['pos'])]!=change['file']:
+          browser_vars.current_playlist[1][int(change['pos'])]=(change['pos'],get_insert(change)[0],change['file'])
+          to_modify.append((int(change['pos']),get_insert(change)[0],change['file']))
+
   browser_vars.current_playlist[1]=browser_vars.current_playlist[1][:playlist_length]
-  browser_vars.current_playlist[2]=browser_vars.current_playlist[2][:playlist_length]
      
   if browser_vars.view=='file':
     set_file_browser(oldsongs[:])
@@ -167,7 +168,7 @@ def check_alarm():
       client.play()
     
 def idle_loop():
-  try:
+  #try:
     status=client.status()    
     stats=client.stats()
     if status['playlist'] != checks.playlist_version:
@@ -184,6 +185,7 @@ def idle_loop():
         checks.song=int(status['songid'])
       else:
         checks.song=-1
+        
       handle_time(status)
     else:     
       if 'song' not in status:
@@ -196,26 +198,27 @@ def idle_loop():
         infowindow_wTree.get_widget('album_entry').set_text('')
       mainwindow_wTree.get_widget('progressbar').set_text('00:00/00:00')
       mainwindow_wTree.get_widget('progressbar').set_fraction(0.0)
-      checks.last_song=None
+      #checks.last_song=None
       if status['playlistlength']=='0':
         mainwindow_wTree.get_widget('current_song_label').set_property('label','')
     ###set things that are bound to change often :)
     mainwindow_wTree.get_widget('volume_scale').set_value(int(status['volume']))
     handle_toggles(status)
-  except: 
-    checks.song=-1
-    mainwindow_wTree.get_widget('progressbar').set_text('not connected')
-    mainwindow_wTree.get_widget('progressbar').set_fraction(0.0)
-    mainwindow_wTree.get_widget('current_song_label').set_property('label','')
-    try:
-      client.disconnect()
-    except:
-      pass
-    try:
-      client.connect(settings.mpd_host,int(settings.mpd_port))
-      client.password(settings.mpd_pass)
-    except:
-      pass
-  return True  
+  #except: 
+  #  checks.song=-1
+  #  mainwindow_wTree.get_widget('progressbar').set_text('not connected')
+  #  mainwindow_wTree.get_widget('progressbar').set_fraction(0.0)
+  #  mainwindow_wTree.get_widget('current_song_label').set_property('label','')
+  #  try:
+  #    client.disconnect()
+  #  except:
+  #    pass
+  #  try:
+  #    client.connect(settings.mpd_host,int(settings.mpd_port))
+  #    client.password(settings.mpd_pass)
+  #  except:
+  #    pass
+    return True  
+
 
 gobject.timeout_add(250,idle_loop)  

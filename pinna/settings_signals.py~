@@ -64,7 +64,7 @@ def apply_settings():
   settings.alarm_minute=settingswindow_wTree.get_widget('alarm_minutes').get_text()
   settings.alarm_volume=settingswindow_wTree.get_widget('alarm_volume').get_text()
   settings.music_directory=settingswindow_wTree.get_widget('music_directory').get_text()
-  if len(settings.music_directory)>0 and settings.music_directory[len(settings.music_directory)-1]!='/':
+  if settings.music_directory[len(settings.music_directory)-1]!='/':
     settings.music_directory+='/'
   if settings.stop_on_exit==True:
     settings.stop_on_exit='1'

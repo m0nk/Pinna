@@ -242,9 +242,7 @@ def save_albumart(artwork):
 def scrape_rhapsody(artist,album):
   artist=artist.replace(' ','-')
   album=album.replace(' ','-')
-  print 'rhapsody'
   url='http://rhapsody.com/'+artist+'/'+album+'/data.xml'
-  print url
   cnodes=minidom.parse(urllib2.urlopen(url)).childNodes
   if len(cnodes)>1:
     cnodes=cnodes[1]
@@ -256,7 +254,6 @@ def scrape_rhapsody(artist,album):
       u=urllib2.urlopen(url)
       save_albumart(u.read())
       u.close()
-    print url
     return True
   else:
     return False
@@ -264,14 +261,11 @@ def scrape_rhapsody(artist,album):
 def scrape_amazon(artist,album):
   artist=artist.replace(' ','+')
   album=album.replace(' ','+')
-  print '\n'
   url="http://musicbrainz.org/ws/1/release/?type=xml&artist='"+artist+"'&title='"+album+"'"
-  print url
   xmldoc=minidom.parse(urllib2.urlopen(url))
   cnodes=xmldoc.childNodes[0]
   amazon_id=cnodes.getElementsByTagName('asin')[0].firstChild.data
   amazon_url='http://ec1.images-amazon.com/images/P/'+amazon_id+'.01.SS170.jpg'
-  print amazon_url
   if str(amazon_id[0])!=' ':
     u=urllib2.urlopen(amazon_url)
     save_albumart(u.read())
@@ -379,7 +373,10 @@ def initiate_filechooser(first=False):
     chooser.add_filter(file_filter)
   else:
     if settings.music_directory:
-      chooser.set_current_folder(settings.music_directory)
+      song=client.currentsong()['file'].split('/')
+      song.pop(len(song)-1)
+      song=settings.music_directory+'/'.join(song)
+      chooser.set_current_folder(song)
     else:
       chooser.set_current_folder(os.getenv("HOME"))
     chooser.show()
@@ -402,7 +399,7 @@ def show_filechooser(widget):
   initiate_filechooser()
 
 def close_filechooser(widget,event=None):
-  widget.hide()
+  infowindow_wTree.get_widget('filechooser').hide()
   return True
 
 initiate_filechooser(True)
